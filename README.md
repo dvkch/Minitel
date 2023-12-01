@@ -44,14 +44,14 @@ Useful links:
 
 ## Connecting the Keyboard to GPIO
 
-Connect all available GPIO pins, starting by ping  (GPIO BCM 14), up until pin 7 (BCM 4), then use pins 3, 4 and 5 of the P5 pinout.
+Connect all available GPIO pins, starting by ping  (GPIO BCM 14), up until pin 11 (BCM 17), then use pins 3, 4, 5 and 6 of the P5 pinout.
 
 This should be the BCM GPIO IDs:
 
 - For X0 to X8 (see ribbon cable, it's written on it, yes, really)
     - 14, 15, 18, 23, 24, 25,  8,  7, 11
 - For Y0 to Y8 
-    -  9, 10, 22, 27, 17,  4, 28, 19, 30
+    -  9, 10, 22, 27, 17, 28, 39, 30, 31
 
 Useful links:
 

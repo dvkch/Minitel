@@ -6,7 +6,7 @@ from evdev import UInput, ecodes as e
 
 ui = UInput(name = "Commodore Pi/4 Keyboard", vendor = 0x1209, product = 0x7501)
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
-cols = [ 9, 10, 22, 27, 17,  4, 28, 19, 30]
+cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
 
 keycoords = [
     "x0y0", "x0y1", "x0y2", "x0y3", "x0y4", "x0y5", "x0y6", "x0y7", "x0y8",
