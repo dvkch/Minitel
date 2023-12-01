@@ -20,6 +20,18 @@ keycoords = [
     "x8y0", "x8y1", "x8y2", "x8y3", "x8y4", "x8y5", "x8y6", "x8y7", "x8y8",
 ]
 
+keynames = [
+    "Left Shift",   "W",        "B",            "N",        "Right Shift",  "V",        "C",        "X",        "<x0y8>",
+    "Q",            "D",        "G",            "J",        "L",            "7",        "8",        "9",        "<x1y8>",
+    "Control",      "S",        "F",            "H",        "K",            "M",        "P",        "O",        "<x2y8>",
+    "A",            "Z",        "E",            "R",        "T",            "Y",        "U",        "I",        "<x3y8>",
+    "Escape",       ",",        ".",            "\"",       ";",            "-",        ":",        "?",        "<x4y8>",
+    "Connexion",    "Guide",    "Correction",   "Suite",    "Envoi",        "4",        "5",        "6",        "<x5y8>",
+    "Fonction",     "Sommaire", "Annulation",   "Retour",   "Répétition",   "1",        "2",        "3",        "<x6y8>",
+    "Up",           "Down",     "Left",         "Right",    "Return",       "*",        "0",        "#",        "Space",
+    "<x8y0>",       "<x8y1>",   "<x8y2>",       "<x8y3>",   "<x8y4>",       "<x8y5>",   "<x8y6>",   "<x8y7>",   "<x8y8>",
+]
+
 keymap = [
     e.KEY_LEFTSHIFT, e.KEY_W,       e.KEY_B,        e.KEY_N,            e.KEY_RIGHTSHIFT, e.KEY_V,          e.KEY_C,        e.KEY_X,       e.KEY_UNKNOWN,
     e.KEY_Q,         e.KEY_D,       e.KEY_G,        e.KEY_J,            e.KEY_L,          e.KEY_KP7,        e.KEY_KP8,      e.KEY_KP9,     e.KEY_UNKNOWN,
@@ -43,7 +55,7 @@ keymap = [
 # Suite         => F9
 # Envoi         => F10
 
-mode = "COORDS"
+mode = "NAMES"
 
 GPIO.setmode(GPIO.BCM)
 GPIO.setup(rows, GPIO.IN)
@@ -65,6 +77,8 @@ while True:
                 pressed.add(keycode)
                 if mode == "COORDS":
                     print(keycoords[keycode], "up")
+                elif mode == "NAMES":
+                    print(keynames[keycode], "up")
                 else:
                     ui.write(e.EV_KEY, keymap[keycode], 1)
                 syn = True
@@ -73,6 +87,8 @@ while True:
                 pressed.discard(keycode)
                 if mode == "COORDS":
                     print(keycoords[keycode], "down")
+                elif mode == "NAMES":
+                    print(keynames[keycode], "down")
                 else:
                     ui.write(e.EV_KEY, keymap[keycode], 0)
                 syn = True
