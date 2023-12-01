@@ -41,3 +41,21 @@ Useful links:
     - [Git](CRT/virtualabs-minipi-v1-github.zip)
 - [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
     - [PDF](CRT/Labomedia.pdf)
+
+## Connecting the Keyboard to GPIO
+
+Connect all available GPIO pins, starting by ping  (GPIO BCM 14), up until pin 7 (BCM 4), then use pins 3, 4 and 5 of the P5 pinout.
+
+This should be the BCM GPIO IDs:
+
+- For X0 to X8 (see ribbon cable, it's written on it, yes, really)
+    - 14, 15, 18, 23, 24, 25,  8,  7, 11
+- For Y0 to Y8 
+    -  9, 10, 22, 27, 17,  4, 28, 19, 30
+
+Useful links:
+
+- [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
+- [GPIO Matrix Keyboard](https://github.com/nutki/rpi-gpio-matrix-keyboard/blob/master/gpio_keyboard.py)
+- [P5 pinout (BCM)](https://elinux.org/RPi_Low-level_peripherals#P5_header)
+- [P5 pinout (WiringPi)](https://pi4j.com/1.2/pins/model-a-rev2.html)
