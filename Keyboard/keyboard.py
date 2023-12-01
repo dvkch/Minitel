@@ -3,6 +3,7 @@
 import RPi.GPIO as GPIO
 from time import sleep
 from evdev import UInput, ecodes as e
+import sys
 
 ui = UInput(name = "Commodore Pi/4 Keyboard", vendor = 0x1209, product = 0x7501)
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
@@ -55,48 +56,78 @@ keymap = [
 # Suite         => F9
 # Envoi         => F10
 
-mode = "NAMES"
+def run(mode_coords, mode_names, mode_keyboard):
+    GPIO.setmode(GPIO.BCM)
+    GPIO.setup(rows, GPIO.IN)
+    GPIO.setup(cols, GPIO.IN, pull_up_down = GPIO.PUD_UP)
+    pressed = set()
 
-GPIO.setmode(GPIO.BCM)
-GPIO.setup(rows, GPIO.IN)
-GPIO.setup(cols, GPIO.IN, pull_up_down = GPIO.PUD_UP)
-pressed = set()
+    while True:
+        sleep(1/60)
+        syn = False
 
-while True:
-    sleep(1/60)
-    syn = False
+        for i in range(len(rows)):
+            GPIO.setup(rows[i], GPIO.OUT, initial = GPIO.LOW)
 
-    for i in range(len(rows)):
-        GPIO.setup(rows[i], GPIO.OUT, initial = GPIO.LOW)
+            for j in range(len(cols)):
+                keycode = i * len(cols) + j
+                newval = GPIO.input(cols[j]) == GPIO.LOW
 
-        for j in range(len(cols)):
-            keycode = i * len(cols) + j
-            newval = GPIO.input(cols[j]) == GPIO.LOW
+                if  newval and not keycode in pressed:
+                    pressed.add(keycode)
+                    if mode_coords:
+                        print(keycoords[keycode], "up")
+                    if mode_names:
+                        print(keynames[keycode], "up")
+                    if mode_keyboard:
+                        ui.write(e.EV_KEY, keymap[keycode], 1)
+                    syn = True
 
-            if  newval and not keycode in pressed:
-                pressed.add(keycode)
-                if mode == "COORDS":
-                    print(keycoords[keycode], "up")
-                elif mode == "NAMES":
-                    print(keynames[keycode], "up")
-                else:
-                    ui.write(e.EV_KEY, keymap[keycode], 1)
-                syn = True
+                elif not newval and keycode in pressed:
+                    pressed.discard(keycode)
+                    if mode_coords:
+                        print(keycoords[keycode], "down")
+                    if mode_names:
+                        print(keynames[keycode], "down")
+                    if mode_keyboard:
+                        ui.write(e.EV_KEY, keymap[keycode], 0)
+                    syn = True
 
-            elif not newval and keycode in pressed:
-                pressed.discard(keycode)
-                if mode == "COORDS":
-                    print(keycoords[keycode], "down")
-                elif mode == "NAMES":
-                    print(keynames[keycode], "down")
-                else:
-                    ui.write(e.EV_KEY, keymap[keycode], 0)
-                syn = True
+            GPIO.setup(rows[i], GPIO.IN)
 
-        GPIO.setup(rows[i], GPIO.IN)
+        if syn:
+            ui.syn()
 
-    if syn:
-        ui.syn()
 
+def help():
+        print("Unknown args: call this script using:")
+        print("- keyboard.py coords    # print the pushed key coords")
+        print("- keyboard.py names     # print the pushed key names")
+        print("- keyboard.py keyboard  # run as a virtual input")
+
+def main():
+    if len(sys.argv) != 2:
+        help()
+        GPIO.cleanup()
+        exit(1)
+
+    if sys.argv[1] == "coords":
+        print("Starting in key coords mode")
+        run(mode_coords = True, mode_names = False, mode_keyboard = False)
+    elif sys.argv[1] == "names":
+        print("Starting in key names mode")
+        run(mode_coords = False, mode_names = True, mode_keyboard = False)
+    elif sys.argv[1] == "keyboard":
+        print("Starting in UInput mode")
+        run(mode_coords = False, mode_names = False, mode_keyboard = True)
+    else:
+        help()
+        GPIO.cleanup()
+        exit(1)
+
+try:
+    main()
+except KeyboardInterrupt:
+    GPIO.cleanup()
 
 
