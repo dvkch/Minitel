@@ -57,6 +57,7 @@ keymap = [
 # Envoi         => F10
 
 def run(mode_coords, mode_names, mode_keyboard):
+    GPIO.setwarnings(True)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(rows, GPIO.IN)
     GPIO.setup(cols, GPIO.IN, pull_up_down = GPIO.PUD_UP)
@@ -108,7 +109,6 @@ def help():
 def main():
     if len(sys.argv) != 2:
         help()
-        GPIO.cleanup()
         exit(1)
 
     if sys.argv[1] == "coords":
@@ -122,12 +122,12 @@ def main():
         run(mode_coords = False, mode_names = False, mode_keyboard = True)
     else:
         help()
-        GPIO.cleanup()
         exit(1)
 
 try:
     main()
 except KeyboardInterrupt:
+    GPIO.setwarnings(False)
     GPIO.cleanup()
 
 
