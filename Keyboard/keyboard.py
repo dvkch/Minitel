@@ -5,7 +5,7 @@ from time import sleep
 from evdev import UInput, ecodes as e
 import sys
 
-ui = UInput(name = "Commodore Pi/4 Keyboard", vendor = 0x1209, product = 0x7501)
+ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
 cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
 
