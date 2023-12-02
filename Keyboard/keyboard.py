@@ -2,79 +2,153 @@
 
 import RPi.GPIO as GPIO
 from time import sleep
-from evdev import UInput, ecodes as e
+from evdev import UInput, InputDevice, ecodes as e
 import sys
 
-ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
 cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
 
-keycoords = [
-    "x0y0", "x0y1", "x0y2", "x0y3", "x0y4", "x0y5", "x0y6", "x0y7", "x0y8",
-    "x1y0", "x1y1", "x1y2", "x1y3", "x1y4", "x1y5", "x1y6", "x1y7", "x1y8",
-    "x2y0", "x2y1", "x2y2", "x2y3", "x2y4", "x2y5", "x2y6", "x2y7", "x2y8",
-    "x3y0", "x3y1", "x3y2", "x3y3", "x3y4", "x3y5", "x3y6", "x3y7", "x3y8",
-    "x4y0", "x4y1", "x4y2", "x4y3", "x4y4", "x4y5", "x4y6", "x4y7", "x4y8",
-    "x5y0", "x5y1", "x5y2", "x5y3", "x5y4", "x5y5", "x5y6", "x5y7", "x5y8",
-    "x6y0", "x6y1", "x6y2", "x6y3", "x6y4", "x6y5", "x6y6", "x6y7", "x6y8",
-    "x7y0", "x7y1", "x7y2", "x7y3", "x7y4", "x7y5", "x7y6", "x7y7", "x7y8",
-    "x8y0", "x8y1", "x8y2", "x8y3", "x8y4", "x8y5", "x8y6", "x8y7", "x8y8",
-]
-
-keynames = [
-    "Left Shift",   "W",        "B",            "N",        "Right Shift",  "V",        "C",        "X",        "<x0y8>",
-    "Q",            "D",        "G",            "J",        "L",            "7",        "8",        "9",        "<x1y8>",
-    "Control",      "S",        "F",            "H",        "K",            "M",        "P",        "O",        "<x2y8>",
-    "A",            "Z",        "E",            "R",        "T",            "Y",        "U",        "I",        "<x3y8>",
-    "Escape",       ",",        ".",            "\"",       ";",            "-",        ":",        "?",        "<x4y8>",
-    "Connexion",    "Guide",    "Correction",   "Suite",    "Envoi",        "4",        "5",        "6",        "<x5y8>",
-    "Fonction",     "Sommaire", "Annulation",   "Retour",   "Répétition",   "1",        "2",        "3",        "<x6y8>",
-    "Up",           "Down",     "Left",         "Right",    "Return",       "*",        "0",        "#",        "Space",
-    "<x8y0>",       "<x8y1>",   "<x8y2>",       "<x8y3>",   "<x8y4>",       "<x8y5>",   "<x8y6>",   "<x8y7>",   "<x8y8>",
-]
-
 # NB: KEY_A corresponds to KEY_A only on a US layout. so we switched the proper keys to have the proper keyboard here
 # used this image : https://qph.cf2.quoracdn.net/main-qimg-5b419d2814ddde26d2d919a14354ca9a-lq
-keymap = [
-    e.KEY_LEFTSHIFT, e.KEY_Z,       e.KEY_B,         e.KEY_N,            e.KEY_RIGHTSHIFT, e.KEY_V,          e.KEY_C,        e.KEY_X,       e.KEY_UNKNOWN,
-    e.KEY_A,         e.KEY_D,       e.KEY_G,         e.KEY_J,            e.KEY_L,          e.KEY_KP7,        e.KEY_KP8,      e.KEY_KP9,     e.KEY_UNKNOWN,
-    e.KEY_LEFTCTRL,  e.KEY_S,       e.KEY_F,         e.KEY_H,            e.KEY_K,          e.KEY_SEMICOLON,  e.KEY_P,        e.KEY_O,       e.KEY_UNKNOWN,
-    e.KEY_Q,         e.KEY_W,       e.KEY_E,         e.KEY_R,            e.KEY_T,          e.KEY_Y,          e.KEY_U,        e.KEY_I,       e.KEY_UNKNOWN,
-    e.KEY_ESC,       e.KEY_M,       [e.KEY_LEFTSHIFT, e.KEY_COMMA],     e.KEY_4,            e.KEY_COMMA,      e.KEY_MINUS,      e.KEY_SLASH,    e.KEY_F1,      e.KEY_UNKNOWN, # slash should be ":", F1 should be "?"
-    e.KEY_F1,        e.KEY_F3,      e.KEY_BACKSPACE, e.KEY_FORWARD,      e.KEY_LEFTMETA,   e.KEY_KP4,        e.KEY_KP5,      e.KEY_KP6,     e.KEY_UNKNOWN,
-    e.KEY_LEFTALT,   e.KEY_F2,      e.KEY_F4,        e.KEY_BACK,         e.KEY_F5,         e.KEY_KP1,        e.KEY_KP2,      e.KEY_KP3,     e.KEY_UNKNOWN,
-    e.KEY_UP,        e.KEY_DOWN,    e.KEY_LEFT,      e.KEY_RIGHT,        e.KEY_ENTER,      e.KEY_KPASTERISK, e.KEY_KP0,      e.KEY_TAB,     e.KEY_SPACE,   # tab should be "#"
-    e.KEY_UNKNOWN,   e.KEY_UNKNOWN, e.KEY_UNKNOWN,   e.KEY_UNKNOWN,      e.KEY_UNKNOWN,    e.KEY_UNKNOWN,    e.KEY_UNKNOWN,  e.KEY_UNKNOWN, e.KEY_UNKNOWN
-]
+keyboard = [
+    ##########
+    # Row 0
+    ##########
+    { "id": "x0y0", "name": "Left Shift",   "code": e.KEY_LEFTSHIFT },
+    { "id": "x0y1", "name": "W",            "code": e.KEY_Z },
+    { "id": "x0y2", "name": "B",            "code": e.KEY_B },
+    { "id": "x0y3", "name": "N",            "code": e.KEY_N },
+    { "id": "x0y4", "name": "Right Shift",  "code": e.KEY_RIGHTSHIFT },
+    { "id": "x0y5", "name": "V",            "code": e.KEY_V },
+    { "id": "x0y6", "name": "C",            "code": e.KEY_C },
+    { "id": "x0y7", "name": "X",            "code": e.KEY_X },
+    { "id": "x0y8", "name": None,           "code": None },
 
-# Connexion/Fin => F1
-# Fnct          => Alt
-# Sommaire      => F2
-# Guide         => F3
-# Annulation    => F4
-# Correction    => Backspace
-# Retour        => Back
-# Suite         => Forward
-# Répétition    => F5
-# Envoi         => Meta
+    ##########
+    # Row 1
+    ##########
+    { "id": "x1y0", "name": "Q",            "code": e.KEY_A },
+    { "id": "x1y1", "name": "D",            "code": e.KEY_D },
+    { "id": "x1y2", "name": "G",            "code": e.KEY_G },
+    { "id": "x1y3", "name": "J",            "code": e.KEY_J },
+    { "id": "x1y4", "name": "L",            "code": e.KEY_L },
+    { "id": "x1y5", "name": "7",            "code": e.KEY_KP7 },
+    { "id": "x1y6", "name": "8",            "code": e.KEY_KP8 },
+    { "id": "x1y7", "name": "9",            "code": e.KEY_KP9 },
+    { "id": "x1y8", "name": None,           "code": None },
+
+    ##########
+    # Row 2
+    ##########
+    { "id": "x2y0", "name": "Control",      "code": e.KEY_LEFTCTRL },
+    { "id": "x2y1", "name": "S",            "code": e.KEY_S },
+    { "id": "x2y2", "name": "F",            "code": e.KEY_F },
+    { "id": "x2y3", "name": "H",            "code": e.KEY_H },
+    { "id": "x2y4", "name": "K",            "code": e.KEY_K },
+    { "id": "x2y5", "name": "M",            "code": e.KEY_SEMICOLON },
+    { "id": "x2y6", "name": "P",            "code": e.KEY_P },
+    { "id": "x2y7", "name": "O",            "code": e.KEY_O },
+    { "id": "x2y8", "name": None,           "code": None },
+
+    ##########
+    # Row 3
+    ##########
+    { "id": "x3y0", "name": "A",            "code": e.KEY_Q },
+    { "id": "x3y1", "name": "Z",            "code": e.KEY_W },
+    { "id": "x3y2", "name": "E",            "code": e.KEY_E },
+    { "id": "x3y3", "name": "R",            "code": e.KEY_R },
+    { "id": "x3y4", "name": "T",            "code": e.KEY_T },
+    { "id": "x3y5", "name": "Y",            "code": e.KEY_Y },
+    { "id": "x3y6", "name": "U",            "code": e.KEY_U },
+    { "id": "x3y7", "name": "I",            "code": e.KEY_I },
+    { "id": "x3y8", "name": None,           "code": None },
+
+    ##########
+    # Row 4
+    ##########
+    { "id": "x4y0", "name": "Escape",       "code": e.KEY_ESC },
+    { "id": "x4y1", "name": ",",            "code": e.KEY_M },
+    { "id": "x4y2", "name": ".",            "code": [e.KEY_LEFTSHIFT, e.KEY_COMMA] },
+    { "id": "x4y3", "name": "'",            "code": e.KEY_4 },
+    { "id": "x4y4", "name": ";",            "code": e.KEY_COMMA },
+    { "id": "x4y5", "name": "-",            "code": e.KEY_6 },
+    { "id": "x4y6", "name": ":",            "code": e.KEY_DOT },
+    { "id": "x4y7", "name": "?",            "code": [e.KEY_LEFTSHIFT, e.KEY_M] },
+    { "id": "x4y8", "name": None,           "code": None },
+
+    ##########
+    # Row 5
+    ##########
+    { "id": "x5y0", "name": "Connexion",    "code": e.KEY_F1 },
+    { "id": "x5y1", "name": "Guide",        "code": e.KEY_F3 },
+    { "id": "x5y2", "name": "Correction",   "code": e.KEY_BACKSPACE },
+    { "id": "x5y3", "name": "Suite",        "code": e.KEY_FORWARD },
+    { "id": "x5y4", "name": "Envoi",        "code": e.KEY_LEFTMETA },
+    { "id": "x5y5", "name": "4",            "code": e.KEY_KP4 },
+    { "id": "x5y6", "name": "5",            "code": e.KEY_KP5 },
+    { "id": "x5y7", "name": "6",            "code": e.KEY_KP6 },
+    { "id": "x5y8", "name": None,           "code": None },
+
+    ##########
+    # Row 6
+    ##########
+    { "id": "x6y0", "name": "Fonction",     "code": e.KEY_LEFTALT },
+    { "id": "x6y1", "name": "Sommaire",     "code": e.KEY_F2 },
+    { "id": "x6y2", "name": "Annulation",   "code": e.KEY_F4 },
+    { "id": "x6y3", "name": "Retour",       "code": e.KEY_BACK },
+    { "id": "x6y4", "name": "Répétition",   "code": e.KEY_F5 },
+    { "id": "x6y5", "name": "1",            "code": e.KEY_KP1 },
+    { "id": "x6y6", "name": "2",            "code": e.KEY_KP2 },
+    { "id": "x6y7", "name": "3",            "code": e.KEY_KP3 },
+    { "id": "x6y8", "name": None,           "code": None },
+
+    ##########
+    # Row 7
+    ##########
+    { "id": "x7y0", "name": "Up",           "code": e.KEY_UP },
+    { "id": "x7y1", "name": "Down",         "code": e.KEY_DOWN },
+    { "id": "x7y2", "name": "Left",         "code": e.KEY_LEFT },
+    { "id": "x7y3", "name": "Right",        "code": e.KEY_RIGHT },
+    { "id": "x7y4", "name": "Return",       "code": e.KEY_ENTER },
+    { "id": "x7y5", "name": "*",            "code": e.KEY_KPASTERISK },
+    { "id": "x7y6", "name": "0",            "code": e.KEY_KP0 },
+    { "id": "x7y7", "name": "#",            "code": e.KEY_NUMLOCK },
+    { "id": "x7y8", "name": "Space",        "code": e.KEY_SPACE },
+
+    ##########
+    # Row 8
+    ##########
+    { "id": "x8y0", "name": None,           "code": None },
+    { "id": "x8y1", "name": None,           "code": None },
+    { "id": "x8y2", "name": None,           "code": None },
+    { "id": "x8y3", "name": None,           "code": None },
+    { "id": "x8y4", "name": None,           "code": None },
+    { "id": "x8y5", "name": None,           "code": None },
+    { "id": "x8y6", "name": None,           "code": None },
+    { "id": "x8y7", "name": None,           "code": None },
+    { "id": "x8y8", "name": None,           "code": None },
+]
 
 def flatten(data):
     flat = []
     for item in data:
         if isinstance(item, list):
             flat.extend(flatten(item))
+        elif item is None:
+            continue
         else:
             flat.append(item)
+
     return flat
 
 def keys(position, reverse=False):
-    keys = flatten([keymap[position]])
+    keys = flatten([keyboard[position]["code"]])
     if reverse:
         keys.reverse()
     return keys
 
 
-def run(mode_coords, mode_names, mode_keyboard):
+def run(ui, mode_coords, mode_names, mode_keyboard):
     GPIO.setwarnings(True)
     GPIO.setmode(GPIO.BCM)
     GPIO.setup(rows, GPIO.IN)
@@ -95,9 +169,9 @@ def run(mode_coords, mode_names, mode_keyboard):
                 if  newval and not keycode in pressed:
                     pressed.add(keycode)
                     if mode_coords:
-                        print(keycoords[keycode], "up")
+                        print(keyboard[keycode]["id"], "down")
                     if mode_names:
-                        print(keynames[keycode], "up")
+                        print(keyboard[keycode]["name"], "down")
                     if mode_keyboard:
                         for key in keys(keycode):
                             ui.write(e.EV_KEY, key, 1)
@@ -106,9 +180,9 @@ def run(mode_coords, mode_names, mode_keyboard):
                 elif not newval and keycode in pressed:
                     pressed.discard(keycode)
                     if mode_coords:
-                        print(keycoords[keycode], "down")
+                        print(keyboard[keycode]["id"], "up")
                     if mode_names:
-                        print(keynames[keycode], "down")
+                        print(keyboard[keycode]["name"], "up")
                     if mode_keyboard:
                         for key in keys(keycode, reverse=True):
                             ui.write(e.EV_KEY, key, 0)
@@ -131,15 +205,19 @@ def main():
         help()
         exit(1)
 
+    ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
+    print(ui)
+    #InputDevice
+
     if sys.argv[1] == "coords":
         print("Starting in key coords mode")
-        run(mode_coords = True, mode_names = False, mode_keyboard = False)
+        run(ui, mode_coords = True, mode_names = False, mode_keyboard = False)
     elif sys.argv[1] == "names":
         print("Starting in key names mode")
-        run(mode_coords = False, mode_names = True, mode_keyboard = False)
+        run(ui, mode_coords = False, mode_names = True, mode_keyboard = False)
     elif sys.argv[1] == "keyboard":
         print("Starting in UInput mode")
-        run(mode_coords = False, mode_names = False, mode_keyboard = True)
+        run(ui, mode_coords = False, mode_names = False, mode_keyboard = True)
     else:
         help()
         exit(1)
