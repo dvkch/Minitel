@@ -82,7 +82,7 @@ keyboard = [
     # Row 5
     ##########
     { "id": "x5y0", "name": "Connexion",    "code": e.KEY_F1 },
-    { "id": "x5y1", "name": "Guide",        "code": e.KEY_F3 },
+    { "id": "x5y1", "name": "Guide/¨",      "code": e.KEY_F3,                       "shift_code": [e.KEY_LEFTSHIFT, e.KEY_LEFTBRACE] },
     { "id": "x5y2", "name": "Correction/§", "code": e.KEY_BACKSPACE,                "shift_code": [e.KEY_LEFTSHIFT, e.KEY_SLASH] },
     { "id": "x5y3", "name": "Suite",        "code": e.KEY_FORWARD },
     { "id": "x5y4", "name": "Envoi/}",      "code": e.KEY_LEFTMETA,                 "shift_code": [e.KEY_RIGHTALT, e.KEY_EQUAL] },
@@ -112,10 +112,10 @@ keyboard = [
     { "id": "x7y2", "name": "Left",         "code": e.KEY_LEFT },
     { "id": "x7y3", "name": "Right",        "code": e.KEY_RIGHT },
     { "id": "x7y4", "name": "Return",       "code": e.KEY_ENTER },
-    { "id": "x7y5", "name": "*/[",          "code": e.KEY_TAB,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_5]  },    # numlock?
-    { "id": "x7y6", "name": "0",            "code": e.KEY_KP0 },
-    { "id": "x7y7", "name": "#/]",          "code": e.KEY_TAB,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_MINUS] }, # tab could be on SHIFT+SPACE, maybe?
-    { "id": "x7y8", "name": "Space",        "code": e.KEY_SPACE },
+    { "id": "x7y5", "name": "NumLock/[",    "code": e.KEY_NUMLOCK,                  "shift_code": [e.KEY_RIGHTALT, e.KEY_5]  },
+    { "id": "x7y6", "name": "0/|",          "code": e.KEY_KP0,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_6] },
+    { "id": "x7y7", "name": "Compose/]",    "code": e.KEY_COMPOSE,                  "shift_code": [e.KEY_RIGHTALT, e.KEY_MINUS] },
+    { "id": "x7y8", "name": "Space/Tab",    "code": e.KEY_SPACE,                    "shift_code": [e.KEY_TAB] },
 
     ##########
     # Row 8
@@ -238,9 +238,6 @@ def main():
         help()
         exit(1)
 
-    ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
-    print(ui)
-
     if sys.argv[1] == "coords":
         print("Starting in key coords mode")
         run(ui, mode_coords = True, mode_names = False, mode_keyboard = False)
@@ -249,6 +246,10 @@ def main():
         run(ui, mode_coords = False, mode_names = True, mode_keyboard = False)
     elif sys.argv[1] == "keyboard":
         print("Starting in UInput mode")
+        print("----")
+        ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
+        print(ui)
+        print("----")
         run(ui, mode_coords = False, mode_names = False, mode_keyboard = True)
     else:
         help()
