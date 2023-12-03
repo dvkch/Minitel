@@ -33,12 +33,14 @@ keynames = [
     "<x8y0>",       "<x8y1>",   "<x8y2>",       "<x8y3>",   "<x8y4>",       "<x8y5>",   "<x8y6>",   "<x8y7>",   "<x8y8>",
 ]
 
+# NB: KEY_A corresponds to KEY_A only on a US layout. so we switched the proper keys to have the proper keyboard here
+# used this image : https://qph.cf2.quoracdn.net/main-qimg-5b419d2814ddde26d2d919a14354ca9a-lq
 keymap = [
-    e.KEY_LEFTSHIFT, e.KEY_W,       e.KEY_B,         e.KEY_N,            e.KEY_RIGHTSHIFT, e.KEY_V,          e.KEY_C,        e.KEY_X,       e.KEY_UNKNOWN,
-    e.KEY_Q,         e.KEY_D,       e.KEY_G,         e.KEY_J,            e.KEY_L,          e.KEY_KP7,        e.KEY_KP8,      e.KEY_KP9,     e.KEY_UNKNOWN,
-    e.KEY_LEFTCTRL,  e.KEY_S,       e.KEY_F,         e.KEY_H,            e.KEY_K,          e.KEY_M,          e.KEY_P,        e.KEY_O,       e.KEY_UNKNOWN,
-    e.KEY_A,         e.KEY_Z,       e.KEY_E,         e.KEY_R,            e.KEY_T,          e.KEY_Y,          e.KEY_U,        e.KEY_I,       e.KEY_UNKNOWN,
-    e.KEY_ESC,       e.KEY_COMMA,   e.KEY_DOT,       e.KEY_APOSTROPHE,   e.KEY_SEMICOLON,  e.KEY_MINUS,      e.KEY_SLASH,    e.KEY_F1,      e.KEY_UNKNOWN, # slash should be ":", F1 should be "?"
+    e.KEY_LEFTSHIFT, e.KEY_Z,       e.KEY_B,         e.KEY_N,            e.KEY_RIGHTSHIFT, e.KEY_V,          e.KEY_C,        e.KEY_X,       e.KEY_UNKNOWN,
+    e.KEY_A,         e.KEY_D,       e.KEY_G,         e.KEY_J,            e.KEY_L,          e.KEY_KP7,        e.KEY_KP8,      e.KEY_KP9,     e.KEY_UNKNOWN,
+    e.KEY_LEFTCTRL,  e.KEY_S,       e.KEY_F,         e.KEY_H,            e.KEY_K,          e.KEY_SEMICOLON,  e.KEY_P,        e.KEY_O,       e.KEY_UNKNOWN,
+    e.KEY_Q,         e.KEY_W,       e.KEY_E,         e.KEY_R,            e.KEY_T,          e.KEY_Y,          e.KEY_U,        e.KEY_I,       e.KEY_UNKNOWN,
+    e.KEY_ESC,       e.KEY_M,       e.KEY_COMMA,     e.KEY_4,            e.KEY_COMMA,      e.KEY_MINUS,      e.KEY_SLASH,    e.KEY_F1,      e.KEY_UNKNOWN, # slash should be ":", F1 should be "?"
     e.KEY_F1,        e.KEY_F3,      e.KEY_BACKSPACE, e.KEY_FORWARD,      e.KEY_LEFTMETA,   e.KEY_KP4,        e.KEY_KP5,      e.KEY_KP6,     e.KEY_UNKNOWN,
     e.KEY_LEFTALT,   e.KEY_F2,      e.KEY_F4,        e.KEY_BACK,         e.KEY_F5,         e.KEY_KP1,        e.KEY_KP2,      e.KEY_KP3,     e.KEY_UNKNOWN,
     e.KEY_UP,        e.KEY_DOWN,    e.KEY_LEFT,      e.KEY_RIGHT,        e.KEY_ENTER,      e.KEY_KPASTERISK, e.KEY_KP0,      e.KEY_TAB,     e.KEY_SPACE,   # tab should be "#"

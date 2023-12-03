@@ -53,6 +53,11 @@ This should be the BCM GPIO IDs:
 - For Y0 to Y8 
     -  9, 10, 22, 27, 17, 28, 39, 30, 31
 
+Add the following dev rules:
+    - create new group: `groupadd minitel`
+    - add pi to the new group: `usermod -a -G minitel pi`
+    - `vim /etc/udev/rules.d/00-minitel.rules` => `KERNEL=="uinput", GROUP="minitel"`
+
 Useful links:
 
 - [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
