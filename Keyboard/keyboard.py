@@ -4,6 +4,7 @@ import RPi.GPIO as GPIO
 from time import sleep
 from evdev import UInput, InputDevice, ecodes as e
 import sys
+import subprocess
 
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
 cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
@@ -112,7 +113,7 @@ keyboard = [
     { "id": "x7y4", "name": "Return",       "code": e.KEY_ENTER },
     { "id": "x7y5", "name": "*",            "code": e.KEY_KPASTERISK },
     { "id": "x7y6", "name": "0",            "code": e.KEY_KP0 },
-    { "id": "x7y7", "name": "#",            "code": e.KEY_NUMLOCK },
+    { "id": "x7y7", "name": "#",            "code": e.KEY_TAB },
     { "id": "x7y8", "name": "Space",        "code": e.KEY_SPACE },
 
     ##########
@@ -201,6 +202,8 @@ def help():
         print("- keyboard.py keyboard  # run as a virtual input")
 
 def main():
+    subprocess.call(['numlockx', 'on'])
+    
     if len(sys.argv) != 2:
         help()
         exit(1)
