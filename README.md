@@ -2,7 +2,7 @@
 
 ## Generic
 
-Useful links:
+#### Useful links
 
 - <https://hackaday.com/tag/minitel/>
 
@@ -10,7 +10,7 @@ Useful links:
 
 cf [RS232](./RS232)
 
-Useful links:
+#### Useful links
 
 - <https://pila.fr/wordpress/?p=361>
     - [PDF](RS232/docs/Un%20minitel%20comme%20terminal%20linux%20USB.pdf)
@@ -19,7 +19,7 @@ Useful links:
 
 cf [CRT](./CRT)
 
-Useful links:
+#### Useful links
 
 - [CFP Radio Minitel 1](http://cfp-radio.com/realisations/rea48/minitel-01.html)
     - [PDF](CRT/CFPRadio1.pdf)
@@ -53,14 +53,33 @@ This should be the BCM GPIO IDs:
 - For Y0 to Y8 
     -  9, 10, 22, 27, 17, 28, 39, 30, 31
 
-Add the following dev rules:
-    - create new group: `groupadd minitel`
-    - add pi to the new group: `usermod -a -G minitel pi`
-    - `vim /etc/udev/rules.d/00-minitel.rules` => `KERNEL=="uinput", GROUP="minitel"`
+Allow using uinput as non-root (cf [Steam help](https://wiki.gentoo.org/wiki/Steam_Controller#Permissions)):
 
-Useful links:
+```
+sudo groupadd minitel
+sudo usermod -a -G minitel pi
+echo 'KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="minitel", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-minitel.rules
+```
+
+Update keyboard config at `/etc/default/keyboard` (or use `sudo raspi-config` > Localization > Keyboard):
+
+```
+# KEYBOARD CONFIGURATION FILE
+
+# Consult the keyboard(5) manual page.
+
+XKBMODEL="pc105"
+XKBLAYOUT="fr"
+XKBVARIANT=""
+XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
+
+BACKSPACE="guess"
+```
+
+#### Useful links
 
 - [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
 - [GPIO Matrix Keyboard](https://github.com/nutki/rpi-gpio-matrix-keyboard/blob/master/gpio_keyboard.py)
 - [P5 pinout (BCM)](https://elinux.org/RPi_Low-level_peripherals#P5_header)
 - [P5 pinout (WiringPi)](https://pi4j.com/1.2/pins/model-a-rev2.html)
+- [UInput events](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h)
