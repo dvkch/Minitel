@@ -2,7 +2,7 @@
 
 import RPi.GPIO as GPIO
 from time import sleep
-from evdev import UInput, ecodes as e
+from evdev import UInput, uinput, ecodes as e
 import sys
 
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
@@ -171,6 +171,23 @@ def press_key(ui, keycode, press, shifts):
         for shift in shifts:
             ui.write(e.EV_KEY, shift, revert_shift_value)
 
+def create_keyboard():
+    ui = None
+    print("---- Initializing keyboard ----")
+
+    while ui is None:
+        try:
+            ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
+            print("Initialized:", ui)
+        except uinput.UInputError as error:
+            ui = None
+            print("Error:", error)
+            print("Retrying in 2s...")
+            sleep(2)
+
+    print("-------------------------------")
+    return ui
+
 def run(ui, mode_coords, mode_names, mode_keyboard):
     GPIO.setwarnings(True)
     GPIO.setmode(GPIO.BCM)
@@ -243,10 +260,7 @@ def main():
         run(ui, mode_coords = False, mode_names = True, mode_keyboard = False)
     elif sys.argv[1] == "keyboard":
         print("Starting in UInput mode")
-        print("----")
-        ui = UInput(name = "Minitel Keyboard", vendor = 0x1209, product = 0x7501)
-        print(ui)
-        print("----")
+        ui = create_keyboard()
         run(ui, mode_coords = False, mode_names = False, mode_keyboard = True)
     else:
         help()
