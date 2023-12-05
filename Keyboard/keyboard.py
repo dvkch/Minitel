@@ -34,9 +34,9 @@ keyboard = [
     { "id": "x1y2", "name": "G",            "code": e.KEY_G },
     { "id": "x1y3", "name": "J",            "code": e.KEY_J },
     { "id": "x1y4", "name": "L",            "code": e.KEY_L },
-    { "id": "x1y5", "name": "7/`",          "code": e.KEY_KP7,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_7] },
-    { "id": "x1y6", "name": "8/(",          "code": e.KEY_KP8,                      "shift_code": e.KEY_5 },
-    { "id": "x1y7", "name": "9/)",          "code": e.KEY_KP9,                      "shift_code": e.KEY_MINUS },
+    { "id": "x1y5", "name": "1/`",          "code": e.KEY_KP1,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_7] },
+    { "id": "x1y6", "name": "2/(",          "code": e.KEY_KP2,                      "shift_code": e.KEY_5 },
+    { "id": "x1y7", "name": "3/)",          "code": e.KEY_KP3,                      "shift_code": e.KEY_MINUS },
     { "id": "x1y8", "name": None,           "code": None },
 
     ##########
@@ -99,9 +99,9 @@ keyboard = [
     { "id": "x6y2", "name": "Annulation/\\","code": e.KEY_F4,                       "shift_code": [e.KEY_RIGHTALT, e.KEY_8] },
     { "id": "x6y3", "name": "Retour",       "code": e.KEY_BACK},
     { "id": "x6y4", "name": "Répétition/{", "code": e.KEY_F5,                       "shift_code": [e.KEY_RIGHTALT, e.KEY_4] },
-    { "id": "x6y5", "name": "1/!",          "code": e.KEY_KP1,                      "shift_code": e.KEY_SLASH },
-    { "id": "x6y6", "name": "2/\"",         "code": e.KEY_KP2,                      "shift_code": e.KEY_3 },
-    { "id": "x6y7", "name": "3/#",          "code": e.KEY_KP3,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_3] },
+    { "id": "x6y5", "name": "7/!",          "code": e.KEY_KP7,                      "shift_code": e.KEY_SLASH },
+    { "id": "x6y6", "name": "8/\"",         "code": e.KEY_KP8,                      "shift_code": e.KEY_3 },
+    { "id": "x6y7", "name": "9/#",          "code": e.KEY_KP9,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_3] },
     { "id": "x6y8", "name": None,           "code": None },
 
     ##########
