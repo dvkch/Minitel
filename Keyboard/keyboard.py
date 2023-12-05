@@ -113,7 +113,7 @@ keyboard = [
     { "id": "x7y4", "name": "Return",       "code": e.KEY_ENTER },
     { "id": "x7y5", "name": "NumLock/[",    "code": e.KEY_NUMLOCK,                  "shift_code": [e.KEY_RIGHTALT, e.KEY_5]  },
     { "id": "x7y6", "name": "0/|",          "code": e.KEY_KP0,                      "shift_code": [e.KEY_RIGHTALT, e.KEY_6] },
-    { "id": "x7y7", "name": "Compose/]",    "code": e.KEY_COMPOSE,                  "shift_code": [e.KEY_RIGHTALT, e.KEY_MINUS] },
+    { "id": "x7y7", "name": "Compose/]",    "code": e.KEY_RIGHTCTRL,                "shift_code": [e.KEY_RIGHTALT, e.KEY_MINUS] },
     { "id": "x7y8", "name": "Space/Tab",    "code": e.KEY_SPACE,                    "shift_code": [e.KEY_TAB] },
 
     ##########
