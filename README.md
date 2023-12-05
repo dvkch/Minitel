@@ -76,6 +76,13 @@ XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 BACKSPACE="guess"
 ```
 
+To support the keyboard at startup [(help)](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/):
+
+```
+sudo vim /etc/rc.local
+/home/pi/Minitel/Keyboard/keyboard.py keyboard &
+```
+
 #### Useful links
 
 - [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
