@@ -4,7 +4,6 @@ import RPi.GPIO as GPIO
 from time import sleep
 from evdev import UInput, ecodes as e
 import sys
-import subprocess
 
 rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
 cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
@@ -232,8 +231,6 @@ def help():
         print("- keyboard.py keyboard  # run as a virtual input")
 
 def main():
-    subprocess.call(['numlockx', 'on'])
-    
     if len(sys.argv) != 2:
         help()
         exit(1)
