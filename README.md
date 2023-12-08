@@ -90,3 +90,9 @@ sudo vim /etc/rc.local
 - [P5 pinout (BCM)](https://elinux.org/RPi_Low-level_peripherals#P5_header)
 - [P5 pinout (WiringPi)](https://pi4j.com/1.2/pins/model-a-rev2.html)
 - [UInput events](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h)
+
+
+## Gaming
+
+- <https://chimeraos.org/>
+- <https://www.recalbox.com/>
