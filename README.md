@@ -76,11 +76,10 @@ XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 BACKSPACE="guess"
 ```
 
-To support the keyboard at startup [(help)](https://www.dexterindustries.com/howto/run-a-program-on-your-raspberry-pi-at-startup/):
+To build and run the keyboard at startup:
 
 ```
-sudo vim /etc/rc.local
-/home/pi/Minitel/Keyboard/keyboard.py keyboard &
+make install
 ```
 
 #### Useful links

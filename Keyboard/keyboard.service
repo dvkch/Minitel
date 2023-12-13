@@ -1,0 +1,13 @@
+[Unit]
+Description=Minitel Keyboard Service
+
+[Service]
+ExecStart=/usr/local/bin/keyboard keyboard
+WorkingDirectory=/
+StandardOutput=inherit
+StandardError=inherit
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target

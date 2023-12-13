@@ -1,6 +1,3 @@
-// Build:
-//   gcc -O3 -lstdc++ -o Keyboard/keyboard Keyboard/keyboard.cpp
-
 #include <cstdio>
 #include <cstdlib>
 #include <cstring>
