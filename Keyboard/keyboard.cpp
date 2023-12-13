@@ -1,10 +1,5 @@
-// Install wiringPi:
-//   wget https://github.com/WiringPi/WiringPi/releases/download/2.61-1/wiringpi-2.61-1-armhf.deb
-//   sudo dpkg -i wiringpi-2.61-1-armhf.deb
-
 // Build:
-//   gcc -o Keyboard/keyboard Keyboard/keyboard.c -lwiringPi
-
+//   gcc -O3 -lstdc++ -o Keyboard/keyboard Keyboard/keyboard.cpp
 
 #include <cstdio>
 #include <cstdlib>
@@ -17,9 +12,8 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-#include <wiringPi.h>
 #include <linux/uinput.h>
-//#include <sys/ioctl.h>
+#include "rpi_gpio.h"
 
 #define ROWS 9
 #define COLS 9
@@ -136,198 +130,217 @@ Key keyboard[ROWS * COLS] = {
     { "x8y8", "<x8y8>",         {0},                        {0},                                false },
 };
 
-void ui_write(int ui, int code, int value) {
-    struct input_event ev;
-    gettimeofday(&ev.time, NULL);
-
-    ev.type = EV_KEY;
-    ev.code = code;
-    ev.value = value;
-
-    if (write(ui, &ev, sizeof(ev)) < 0) {
-        fprintf(stderr, "Error writing key event to uinput device\n");
-    }
-}
-
-void ui_write_syn(int ui) {
-    struct input_event ev;
-    gettimeofday(&ev.time, NULL);
-
-    ev.type = EV_SYN;
-    ev.code = SYN_REPORT;
-    ev.value = 0;
-
-    if (write(ui, &ev, sizeof(ev)) < 0) {
-        fprintf(stderr, "Error syncing key event to uinput device\n");
-    }
-}
-
-
-void press_key(int ui, const Key& key_config, bool press, const std::set<int>& shifts) {
-    std::vector<int> keys = key_config.codes;
-    bool using_shift_codes = false;
-
-    if (!shifts.empty() && !key_config.shift_codes.empty()) {
-        keys = key_config.shift_codes;
-        using_shift_codes = true;
-    }
-
-    if (!press) {
-        std::reverse(keys.begin(), keys.end());
-    }
-
-    int value = press ? 1 : 0;
-
-    if (using_shift_codes) {
-        int revert_shift_value = press ? 0 : 1;
-        for (int shift : shifts) {
-            ui_write(ui, shift, revert_shift_value);
-            // fprintf(stderr, "Writing EV_KEY %d with value %d\n", shift, revert_shift_value);
-        }
-    }
-
-    for (int key : keys) {
-        ui_write(ui, key, value);
-        // fprintf(stderr, "Writing EV_KEY %d with value %d\n", key, value);
-    }
-
-    if (using_shift_codes) {
-        int revert_shift_value = press ? 1 : 0;
-        for (int shift : shifts) {
-            ui_write(ui, shift, revert_shift_value);
-            // fprintf(stderr, "Writing EV_KEY %d with value %d\n", shift, revert_shift_value);
-        }
-    }
-}
-
-int create_keyboard() {
-    int ui = -1;
-    struct uinput_user_dev uidev;
-
-    printf("---- Initializing keyboard ----\n");
-
-    while (ui == -1) {
-        ui = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
-        if (ui == -1) {
-            fprintf(stderr, "Error opening /dev/uinput\n");
-            return -1;
+class Input {
+    public:
+        Input() {
+            fd = Input::create();
         }
 
-        // Set up the uinput device
-        ioctl(ui, UI_SET_EVBIT, EV_KEY);
-        for (int k = 0; k < ROWS * COLS; k++) {
-            for (int key : keyboard[k].codes) {
-                ioctl(ui, UI_SET_KEYBIT, key);
-            }
-            for (int key : keyboard[k].shift_codes) {
-                ioctl(ui, UI_SET_KEYBIT, key);
+        void send_key(int code, int value) {
+            struct input_event ev;
+            gettimeofday(&ev.time, NULL);
+
+            ev.type = EV_KEY;
+            ev.code = code;
+            ev.value = value;
+
+            if (write(this->fd, &ev, sizeof(ev)) < 0) {
+                fprintf(stderr, "Error writing key event to uinput device\n");
             }
         }
 
-        memset(&uidev, 0, sizeof(uidev));
-        snprintf(uidev.name, UINPUT_MAX_NAME_SIZE, "Minitel Keyboard");
-        uidev.id.bustype = BUS_USB;
-        uidev.id.vendor  = 0x1209;
-        uidev.id.product = 0x7501;
+        void send_syn() {
+            struct input_event ev;
+            gettimeofday(&ev.time, NULL);
 
-        if (ioctl(ui, UI_DEV_SETUP, &uidev) < 0) {
-            printf("Error writing to uinput device\n");
-            close(ui);
-            return -1;
+            ev.type = EV_SYN;
+            ev.code = SYN_REPORT;
+            ev.value = 0;
+
+            if (write(this->fd, &ev, sizeof(ev)) < 0) {
+                fprintf(stderr, "Error syncing key event to uinput device\n");
+            }
         }
 
-        if (ioctl(ui, UI_DEV_CREATE) < 0) {
-            printf("Error creating uinput device\n");
-            close(ui);
-            return -1;
+    private:
+        int fd;
+
+        static int create() {
+            int fd = -1;
+            struct uinput_user_dev uidev;
+
+            printf("---- Initializing keyboard ----\n");
+
+            while (fd == -1) {
+                fd = open("/dev/uinput", O_WRONLY | O_NONBLOCK);
+                if (fd == -1) {
+                    fprintf(stderr, "Error opening /dev/uinput\n");
+                    return -1;
+                }
+
+                // Set up the uinput device
+                ioctl(fd, UI_SET_EVBIT, EV_KEY);
+                for (int k = 0; k < ROWS * COLS; k++) {
+                    for (int key : keyboard[k].codes) {
+                        ioctl(fd, UI_SET_KEYBIT, key);
+                    }
+                    for (int key : keyboard[k].shift_codes) {
+                        ioctl(fd, UI_SET_KEYBIT, key);
+                    }
+                }
+
+                memset(&uidev, 0, sizeof(uidev));
+                snprintf(uidev.name, UINPUT_MAX_NAME_SIZE, "Minitel Keyboard");
+                uidev.id.bustype = BUS_USB;
+                uidev.id.vendor  = 0x1209;
+                uidev.id.product = 0x7501;
+
+                if (ioctl(fd, UI_DEV_SETUP, &uidev) < 0) {
+                    printf("Error writing to uinput device\n");
+                    close(fd);
+                    return -1;
+                }
+
+                if (ioctl(fd, UI_DEV_CREATE) < 0) {
+                    printf("Error creating uinput device\n");
+                    close(fd);
+                    return -1;
+                }
+
+                printf("Initialized uinput device\n");
+            }
+
+            printf("-------------------------------\n");
+            return fd;
+        }
+};
+
+class Keyboard {
+    public: 
+        Keyboard(bool printCoords, bool printNames, Input *input) {
+            this->printCoords = printCoords;
+            this->printNames = printNames;
+            this->input = input;
         }
 
-        printf("Initialized uinput device\n");
-    }
+        void run() {
+            if (rpi_gpio_init() < 0) {
+                perror("Failed to initialize RPi GPIO");
+                return;
+            }
+            for (int i = 0; i < ROWS; i++) {
+                rpi_gpio_setup(rows[i], INPUT, PUD_OFF);
+            }
+            for (int i = 0; i < COLS; i++) {
+                rpi_gpio_setup(cols[i], INPUT, PUD_UP);
+            }
 
-    printf("-------------------------------\n");
-    return ui;
-}
+            while (true) {
+                usleep(1000000 / 60); // Sleep for 1/60 seconds
+                bool syn = false;
 
-void run(int ui, bool mode_coords, bool mode_names, bool mode_keyboard) {
-    wiringPiSetupGpio(); // Gpio => BCM codes
+                for (int i = 0; i < ROWS; ++i) {
+                    rpi_gpio_output(rows[i], 0);
+                    rpi_gpio_set_fn(rows[i], OUTPUT);
+                    usleep(3);
+                    uint32_t all = rpi_gpio_input_all();
+                    rpi_gpio_set_fn(rows[i], INPUT);
 
-    for (int i = 0; i < ROWS; ++i) {
-        pinMode(rows[i], INPUT);
-        pullUpDnControl(rows[i], PUD_OFF);
-    }
-    for (int i = 0; i < COLS; ++i) {
-        pinMode(cols[i], INPUT);
-        pullUpDnControl(cols[i], PUD_UP);
-    }
+                    for (int j = 0; j < COLS; ++j) {
+                        int keycode = i * COLS + j;
+                        int newval = !(all & (1 << cols[j]));
 
-    std::set<int> pressed;
-    std::set<int> shifts;
+                        if (newval && pressed.find(keycode) == pressed.end()) {
+                            this->pressed.insert(keycode);
+                            bool is_shift = keyboard[keycode].is_shift;
+                            if (is_shift) {
+                                for (int code : keyboard[keycode].codes) {
+                                    this->shifts.insert(code);
+                                }
+                            }
 
-    while (true) {
-        usleep(1000000 / 60); // Sleep for 1/60 seconds
-        bool syn = false;
+                            if (this->printCoords) {
+                                printf("%s down\n", keyboard[keycode].id);
+                            }
+                            if (this->printNames) {
+                                printf("%s down\n", keyboard[keycode].name);
+                            }
+                            if (this->input) {
+                                this->sendKey(keyboard[keycode], true);
+                                syn = true;
+                            }
 
-        for (int i = 0; i < ROWS; ++i) {
-            digitalWrite(rows[i], LOW);
-            pinMode(rows[i], OUTPUT);
-            usleep(3);
+                        } 
+                        else if (!newval && pressed.find(keycode) != pressed.end()) {
+                            this->pressed.erase(keycode);
+                            bool is_shift = keyboard[keycode].is_shift;
+                            if (is_shift) {
+                                for (int code : keyboard[keycode].codes) {
+                                    this->shifts.erase(code);
+                                }
+                            }
 
-            for (int j = 0; j < COLS; ++j) {
-                int keycode = i * COLS + j;
-                bool newval = digitalRead(cols[j]) == LOW;
-
-                if (newval && pressed.find(keycode) == pressed.end()) {
-                    pressed.insert(keycode);
-                    bool is_shift = keyboard[keycode].is_shift;
-                    if (is_shift) {
-                        for (int code : keyboard[keycode].codes) {
-                            shifts.insert(code);
+                            if (this->printCoords) {
+                                printf("%s up\n", keyboard[keycode].id);
+                            }
+                            if (this->printNames) {
+                                printf("%s up\n", keyboard[keycode].name);
+                            }
+                            if (this->input) {
+                                this->sendKey(keyboard[keycode], false);
+                                syn = true;
+                            }
                         }
                     }
+                }
 
-                    if (mode_coords) {
-                        printf("%s down\n", keyboard[keycode].id);
-                    }
-                    if (mode_names) {
-                        printf("%s down\n", keyboard[keycode].name);
-                    }
-                    if (mode_keyboard) {
-                        press_key(ui, keyboard[keycode], true, shifts);
-                        syn = true;
-                    }
+                if (syn && this->input) {
+                    this->input->send_syn();
+                }
+            }
+        }
 
-                } 
-                else if (!newval && pressed.find(keycode) != pressed.end()) {
-                    pressed.erase(keycode);
-                    bool is_shift = keyboard[keycode].is_shift;
-                    if (is_shift) {
-                        for (int code : keyboard[keycode].codes) {
-                            shifts.erase(code);
-                        }
-                    }
+    private:
+        bool printCoords;
+        bool printNames;
+        Input *input;
+        std::set<int> pressed;
+        std::set<int> shifts;
 
-                    if (mode_coords) {
-                        printf("%s up\n", keyboard[keycode].id);
-                    }
-                    if (mode_names) {
-                        printf("%s up\n", keyboard[keycode].name);
-                    }
-                    if (mode_keyboard) {
-                        press_key(ui, keyboard[keycode], false, shifts);
-                        syn = true;
-                    }
+        void sendKey(const Key& key_config, bool pressed) {
+            std::vector<int> keys = key_config.codes;
+            bool using_shift_codes = false;
+
+            if (!shifts.empty() && !key_config.shift_codes.empty()) {
+                keys = key_config.shift_codes;
+                using_shift_codes = true;
+            }
+
+            if (!pressed) {
+                std::reverse(keys.begin(), keys.end());
+            }
+
+            int value = pressed ? 1 : 0;
+
+            if (using_shift_codes) {
+                int revert_shift_value = pressed ? 0 : 1;
+                for (int shift : shifts) {
+                    this->input->send_key(shift, revert_shift_value);
                 }
             }
 
-            pinMode(rows[i], INPUT);
-        }
+            for (int key : keys) {
+                this->input->send_key(key, value);
+            }
 
-        if (syn) {
-            ui_write_syn(ui);
+            if (using_shift_codes) {
+                int revert_shift_value = pressed ? 1 : 0;
+                for (int shift : shifts) {
+                    this->input->send_key(shift, revert_shift_value);
+                }
+            }    
         }
-    }
-}
+};
 
 void help() {
     printf("Unknown args: call this script using:\n");
@@ -344,16 +357,19 @@ int main(int argc, char* argv[]) {
 
     if (strcmp(argv[1], "coords") == 0) {
         printf("Starting in key coords mode\n");
-        run(-1, true, false, false);
+        Keyboard *k = new Keyboard(true, false, NULL);
+        k->run();
     } 
     else if (strcmp(argv[1], "names") == 0) {
         printf("Starting in key names mode\n");
-        run(-1, false, true, false);
+        Keyboard *k = new Keyboard(false, true, NULL);
+        k->run();
     } 
     else if (strcmp(argv[1], "keyboard") == 0) {
         printf("Starting in UInput mode\n");
-        int ui = create_keyboard();
-        run(ui, false, false, true);
+        Input *input = (strcmp(argv[1], "keyboard") == 0) ? new Input() : NULL;
+        Keyboard *k = new Keyboard(false, false, input);
+        k->run();
     }
     else {
         help();
