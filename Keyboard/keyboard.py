@@ -206,7 +206,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
             for j in range(len(cols)):
                 keycode = i * len(cols) + j
                 newval = GPIO.input(cols[j]) == GPIO.LOW
-
+    
                 if  newval and not keycode in pressed:
                     pressed.add(keycode)
                     is_shift = "is_shift" in keyboard[keycode] and keyboard[keycode]["is_shift"]
