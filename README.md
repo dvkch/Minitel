@@ -92,7 +92,14 @@ sudo vim /etc/rc.local
 - [UInput events](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h)
 
 
+## SuperDrive
+
+Apple SuperDrive requires specific commands to enable it, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068).
+
+Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio Corporation INIC-1618L SATA`
+
 ## Gaming
 
 - <https://chimeraos.org/>
 - <https://www.recalbox.com/>
+- [Doom](https://pimylifeup.com/raspberry-pi-doom/)
