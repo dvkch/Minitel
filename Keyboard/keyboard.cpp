@@ -15,8 +15,8 @@
 #define ROWS 9
 #define COLS 9
 
-int rows[ROWS] = {14, 15, 18, 23, 24, 25, 8, 7, 11};
-int cols[COLS] = {9, 10, 22, 27, 17, 28, 29, 30, 31};
+int rows[ROWS] = {14, 15, 18, 23, 24, 25, 8, 7, 1};
+int cols[COLS] = {6, 5, 0, 11, 9, 10, 22, 27, 17};
 
 typedef struct {
     const char *id;

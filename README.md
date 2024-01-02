@@ -49,9 +49,9 @@ Connect all available GPIO pins, starting by ping  (GPIO BCM 14), up until pin 1
 This should be the BCM GPIO IDs:
 
 - For X0 to X8 (see ribbon cable, it's written on it, yes, really)
-    - 14, 15, 18, 23, 24, 25,  8,  7, 11
+    - 14, 15, 18, 23, 24, 25,  8,  7, 1
 - For Y0 to Y8 
-    -  9, 10, 22, 27, 17, 28, 39, 30, 31
+    - 6, 5, 0, 11, 9, 10, 22, 27, 17
 
 Allow using uinput as non-root (cf [Steam help](https://wiki.gentoo.org/wiki/Steam_Controller#Permissions)):
 

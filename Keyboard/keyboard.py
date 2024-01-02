@@ -5,8 +5,8 @@ from time import sleep
 from evdev import UInput, uinput, ecodes as e
 import sys
 
-rows = [14, 15, 18, 23, 24, 25,  8,  7, 11]
-cols = [ 9, 10, 22, 27, 17, 28, 29, 30, 31]
+rows = [14, 15, 18, 23, 24, 25,  8,  7,  1]
+cols = [ 6,  5,  0, 11,  9, 10, 22, 27, 17]
 
 # NB: KEY_A corresponds to KEY_A only on a US layout. so we switched the proper keys to have the proper keyboard here
 # used this image : https://qph.cf2.quoracdn.net/main-qimg-5b419d2814ddde26d2d919a14354ca9a-lq
