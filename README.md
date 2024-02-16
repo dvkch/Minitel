@@ -1,5 +1,12 @@
 # Minitel
 
+## Multiboot
+
+- <https://raspberrytips.fr/dual-boot-raspberry-pi/>
+- <https://sourceforge.net/projects/pinn/>
+- <https://github.com/procount/pinn>
+
+
 ## Generic
 
 #### Useful links
@@ -102,3 +109,4 @@ Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio
 - <https://chimeraos.org/>
 - <https://www.recalbox.com/>
 - [Doom](https://pimylifeup.com/raspberry-pi-doom/)
+- [Box64 x Wine](https://github.com/ptitSeb/box64/blob/main/docs/X64WINE.md)
