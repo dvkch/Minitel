@@ -136,4 +136,12 @@ sudo ln -s ~/wine/bin/winecfg /usr/local/bin/winecfg
 sudo ln -s ~/wine/bin/wineserver /usr/local/bin/wineserver
 sudo chmod +x /usr/local/bin/wine /usr/local/bin/wine64 /usr/local/bin/wineboot /usr/local/bin/winecfg /usr/local/bin/wineserver
 
+# Install winetricks
+sudo apt install cabextract
+
+cd ~/wine
+wget https://raw.githubusercontent.com/Winetricks/winetricks/master/src/winetricks
+chmod +x winetricks
+sudo ln -s ~/wine/winetricks /usr/local/bin/winetricks
+
 echo "Done"

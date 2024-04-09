@@ -110,3 +110,9 @@ Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio
 - <https://www.recalbox.com/>
 - [Doom](https://pimylifeup.com/raspberry-pi-doom/)
 - [Box64 x Wine](https://github.com/ptitSeb/box64/blob/main/docs/X64WINE.md)
+
+## HDMI Overscan
+
+Add this to `/boot/firmware/cmdline.txt`
+
+`video=HDMI-A-1:1024x768@60,margin_left=20,margin_right=20,margin_top=32,margin_bottom=24`
