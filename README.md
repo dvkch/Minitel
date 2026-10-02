@@ -1,122 +1,54 @@
 # Minitel
 
-## Multiboot
+Once upon a time, not so long ago, an ADHD-induced fantasy crossed my mind and I decided to go get an old [Minitel](https://en.wikipedia.org/wiki/Minitel) to modernize it.
 
-- <https://raspberrytips.fr/dual-boot-raspberry-pi/>
-- <https://sourceforge.net/projects/pinn/>
-- <https://github.com/procount/pinn>
+After some weeks, the final work is as such:
 
+- style:
+  - the original box has been kept mostly intact
+  - kept the original power button, cutting the main 12V input
+  - added back an LED for status
+- computing:
+  - a Raspberry Pi 4 is the new brain
+- display: 
+  - the CRT screen has been cut to keep only the facade
+  - an iPad2 screen with a driver board now handles the display
+- keyboard: 
+  - the original keyboard is connected to the RPi, originally via its GPIO pins, now via an ESP32-S3 acting as a USB keyboard
+- additional IO:
+  - an old SuperDrive now allows for reading and burning CDs/DVDs
+  - a PS/2 adapter connects a beautiful IBM trackball mouse
+  - a speaker and a mic are connected through a simple USB audio card
 
-## Generic
+This is now my retro gaming station, and as any project should, this repo contains useful information and code to reproduce the same.
 
-#### Useful links
+## Inside this repo
 
-- <https://hackaday.com/tag/minitel/>
+- [RS232](./RS232): Chatting to a Minitel with a reversible model via RS232
+- [CRT](./CRT): Reusing the original CRT
+- [KeyboardC](./KeyboardC): User-land drivers in C++ to test and use the original keyboard. 
+- [KeyboardPy](./KeyboardPy): Python equivalent of KeyboardC, technically its ancestor, easier to modify if you'd like to play with the code
 
-## Over RS232
+## Useful Links
 
-cf [RS232](./RS232)
+- Similar projects
+  - <https://hackaday.com/tag/minitel/>
 
-#### Useful links
+- MultiBoot on a RPi
+  - <https://raspberrytips.fr/dual-boot-raspberry-pi/>
+  - <https://sourceforge.net/projects/pinn/>
+  - <https://github.com/procount/pinn>
 
-- <https://pila.fr/wordpress/?p=361>
-    - [PDF](RS232/docs/Un%20minitel%20comme%20terminal%20linux%20USB.pdf)
+- Gaming on the RPi:
+  - <https://chimeraos.org/>
+  - <https://www.recalbox.com/>
+  - [Doom](https://pimylifeup.com/raspberry-pi-doom/)
+  - [Box64 x Wine](https://github.com/ptitSeb/box64/blob/main/docs/X64WINE.md)
 
-## Reusing the CRT display
+- SuperDrive
+  - Apple SuperDrive requires specific commands to enable it, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068).
+  - Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio Corporation INIC-1618L SATA`
 
-cf [CRT](./CRT)
-
-#### Useful links
-
-- [CFP Radio Minitel 1](http://cfp-radio.com/realisations/rea48/minitel-01.html)
-    - [PDF](CRT/CFPRadio1.pdf)
-    - [Mail](CRT/CFPRadio-mail.pdf)
-- [CFP Radio Minitel 2](http://cfp-radio.com/realisations/rea48/minitel-02.html)
-    - [PDF](CRT/CFPRadio2.pdf)
-- [Jla](http://jla.1313-blog.overblog.com/recyclage-d-un-minitel-9-en-moniteur-b/w)
-    - [Wayback](https://web.archive.org/web/20131228235557/http://jla.1313-blog.overblog.com/recyclage-d-un-minitel-9-en-moniteur-b/w)
-    - [PDF](CRT/jla.pdf)
-    - [Mail](CRT/jla-mail.pdf)
-    - [Board](CRT/jla-ob_8fa9ba8a03352d48b94c1b4ec49454e7_minitel.Tci)
-    - [Board software](CRT/jla-tci4-4.exe)
-- [MiniPi Prequel](https://virtualabs.fr/Super-Minitel-Entertainment-System)
-    - [Wayback](https://web.archive.org/web/20161227100240/http://www.virtualabs.fr:80/Super-Minitel-Entertainment-System)
-    - [PDF](CRT/virtualabs-prequel.pdf)
-- [MiniPi v1](https://virtualabs.fr/openit/doku.php?id=projets:minipi-v1)
-    - [PDF](CRT/virtualabs-minipi-v1.pdf)
-    - [Board](CRT/virtualabs-minipi-v1-oshpark.brd)
-    - [Git](CRT/virtualabs-minipi-v1-github.zip)
-- [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
-    - [PDF](CRT/Labomedia.pdf)
-
-## Connecting the Keyboard to GPIO
-
-Tested on a Raspberry Pi 4B, should work on any Pi with a 40-pin header (except the Pi 5 for the C version).
-
-Connect the keyboard ribbon cable to these BCM GPIO IDs:
-
-- For X0 to X8 (see ribbon cable, it's written on it, yes, really)
-    - 14, 15, 18, 23, 24, 25,  8,  7, 1
-- For Y0 to Y8 
-    - 6, 5, 0, 11, 9, 10, 22, 27, 17
-
-The keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. Both drivers ignore new key presses in such a configuration.
-
-Update keyboard config at `/etc/default/keyboard` (or use `sudo raspi-config` > Localization > Keyboard):
-
-```
-# KEYBOARD CONFIGURATION FILE
-
-# Consult the keyboard(5) manual page.
-
-XKBMODEL="pc105"
-XKBLAYOUT="fr"
-XKBVARIANT=""
-XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
-
-BACKSPACE="guess"
-```
-
-Two equivalent drivers are available, installing one disables the other:
-
-- [KeyboardC](./KeyboardC): `cd KeyboardC && sudo make install`
-- [KeyboardPy](./KeyboardPy): `cd KeyboardPy && sudo make install` (also installs the required apt packages)
-
-Both can be removed with `sudo make uninstall`. To debug, stop the service and run the driver manually with `coords` (prints the matrix position of each key) or `names` (prints the key label), e.g. `sudo ./minitel-keyboard-c coords` or `sudo ./keyboard.py coords`.
-
-To run a driver as a non-root user, allow using uinput (cf [Steam help](https://wiki.gentoo.org/wiki/Steam_Controller#Permissions)):
-
-```
-sudo groupadd minitel
-sudo usermod -a -G minitel pi
-echo 'KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="minitel", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-minitel.rules
-```
-
-#### Useful links
-
-- [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
-- [GPIO Matrix Keyboard](https://github.com/nutki/rpi-gpio-matrix-keyboard/blob/master/gpio_keyboard.py)
-- [Pinout](https://pinout.xyz)
-- [UInput events](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h)
-
-
-## SuperDrive
-
-Apple SuperDrive requires specific commands to enable it, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068).
-
-Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio Corporation INIC-1618L SATA`
-
-## Gaming
-
-- <https://chimeraos.org/>
-- <https://www.recalbox.com/>
-- [Doom](https://pimylifeup.com/raspberry-pi-doom/)
-- [Box64 x Wine](https://github.com/ptitSeb/box64/blob/main/docs/X64WINE.md)
-
-## HDMI Overscan
-
-> <https://raspberrypi.stackexchange.com/a/145670>
-
-Add this to `/boot/firmware/cmdline.txt`
-
-`video=HDMI-A-1:1024x768@60,margin_left=20,margin_right=20,margin_top=32,margin_bottom=24`
+- HDMI Overscan
+  - <https://raspberrypi.stackexchange.com/a/145670>
+  - Add this to `/boot/firmware/cmdline.txt`: `video=HDMI-A-1:1024x768@60,margin_left=20,margin_right=20,margin_top=32,margin_bottom=24`
