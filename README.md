@@ -51,22 +51,16 @@ cf [CRT](./CRT)
 
 ## Connecting the Keyboard to GPIO
 
-Connect all available GPIO pins, starting by ping  (GPIO BCM 14), up until pin 11 (BCM 17), then use pins 3, 4, 5 and 6 of the P5 pinout.
+Tested on a Raspberry Pi 4B, should work on any Pi with a 40-pin header (except the Pi 5 for the C version).
 
-This should be the BCM GPIO IDs:
+Connect the keyboard ribbon cable to these BCM GPIO IDs:
 
 - For X0 to X8 (see ribbon cable, it's written on it, yes, really)
     - 14, 15, 18, 23, 24, 25,  8,  7, 1
 - For Y0 to Y8 
     - 6, 5, 0, 11, 9, 10, 22, 27, 17
 
-Allow using uinput as non-root (cf [Steam help](https://wiki.gentoo.org/wiki/Steam_Controller#Permissions)):
-
-```
-sudo groupadd minitel
-sudo usermod -a -G minitel pi
-echo 'KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="minitel", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-minitel.rules
-```
+The keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. Both drivers ignore new key presses in such a configuration.
 
 Update keyboard config at `/etc/default/keyboard` (or use `sudo raspi-config` > Localization > Keyboard):
 
@@ -83,18 +77,26 @@ XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 BACKSPACE="guess"
 ```
 
-To build and run the keyboard at startup:
+Two equivalent drivers are available, installing one disables the other:
+
+- [KeyboardC](./KeyboardC): `cd KeyboardC && sudo make install`
+- [KeyboardPy](./KeyboardPy): `cd KeyboardPy && sudo make install` (also installs the required apt packages)
+
+Both can be removed with `sudo make uninstall`. To debug, stop the service and run the driver manually with `coords` (prints the matrix position of each key) or `names` (prints the key label), e.g. `sudo ./minitel-keyboard-c coords` or `sudo ./keyboard.py coords`.
+
+To run a driver as a non-root user, allow using uinput (cf [Steam help](https://wiki.gentoo.org/wiki/Steam_Controller#Permissions)):
 
 ```
-make install
+sudo groupadd minitel
+sudo usermod -a -G minitel pi
+echo 'KERNEL=="uinput", SUBSYSTEM=="misc", MODE="0660", GROUP="minitel", OPTIONS+="static_node=uinput"' | sudo tee /etc/udev/rules.d/99-minitel.rules
 ```
 
 #### Useful links
 
 - [Labomedia](https://wiki.labomedia.org/index.php/Renaissance_d%27un_Minitel_avec_une_Raspberry_Pi)
 - [GPIO Matrix Keyboard](https://github.com/nutki/rpi-gpio-matrix-keyboard/blob/master/gpio_keyboard.py)
-- [P5 pinout (BCM)](https://elinux.org/RPi_Low-level_peripherals#P5_header)
-- [P5 pinout (WiringPi)](https://pi4j.com/1.2/pins/model-a-rev2.html)
+- [Pinout](https://pinout.xyz)
 - [UInput events](https://github.com/torvalds/linux/blob/master/include/uapi/linux/input-event-codes.h)
 
 

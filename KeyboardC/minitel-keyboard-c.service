@@ -1,0 +1,11 @@
+[Unit]
+Description=Minitel Keyboard (C)
+Conflicts=minitel-keyboard-py.service
+
+[Service]
+ExecStart=/usr/local/bin/minitel-keyboard-c keyboard
+Restart=always
+User=root
+
+[Install]
+WantedBy=multi-user.target
