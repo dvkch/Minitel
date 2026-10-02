@@ -133,16 +133,38 @@ class Input {
             fd = Input::create();
         }
 
-        void send_key(int code, int value) {
-            struct input_event ev;
-            gettimeofday(&ev.time, NULL);
+        void sendKey(int keycode, bool pressed) {
+            const Key& key_config = keyboard[keycode];
 
-            ev.type = EV_KEY;
-            ev.code = code;
-            ev.value = value;
+            // the variant is chosen on press and reused on release, even if Shift changed meanwhile
+            if (pressed && !shifts.empty() && !key_config.shift_codes.empty()) {
+                shifted_keys.insert(keycode);
+            }
+            bool using_shift_codes = shifted_keys.count(keycode) > 0;
+            if (!pressed) {
+                shifted_keys.erase(keycode);
+            }
 
-            if (write(this->fd, &ev, sizeof(ev)) < 0) {
-                fprintf(stderr, "Error writing key event to uinput device\n");
+            std::vector<int> keys = using_shift_codes ? key_config.shift_codes : key_config.codes;
+            if (!pressed) {
+                std::reverse(keys.begin(), keys.end());
+            }
+
+            // shifted variants are typed without Shift, which is restored once the key is released
+            if (using_shift_codes && pressed) {
+                for (int shift : shifts) {
+                    this->input->send_key(shift, 0);
+                }
+            }
+
+            for (int key : keys) {
+                this->input->send_key(key, pressed ? 1 : 0);
+            }
+
+            if (using_shift_codes && !pressed) {
+                for (int shift : shifts) {
+                    this->input->send_key(shift, 1);
+                }
             }
         }
 
@@ -304,6 +326,7 @@ class Keyboard {
         Input *input;
         std::set<int> pressed;
         std::set<int> shifts;
+        std::set<int> shifted_keys;
 
         void sendKey(const Key& key_config, bool pressed) {
             std::vector<int> keys = key_config.codes;

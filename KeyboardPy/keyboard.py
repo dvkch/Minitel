@@ -142,34 +142,31 @@ def flatten(data):
 
     return flat
 
-def press_key(ui, keycode, press, shifts):
+def press_key(ui, keycode, press, shifts, shifted_keys):
     key_config = keyboard[keycode]
 
-    keys = [key_config["code"]]
-    using_shift_codes = False
+    # the variant is chosen on press and reused on release, even if Shift changed meanwhile
+    if press and len(shifts) > 0 and "shift_code" in key_config:
+        shifted_keys.add(keycode)
+    using_shift_codes = keycode in shifted_keys
+    if not press:
+        shifted_keys.discard(keycode)
 
-    if len(shifts) > 0 and "shift_code" in key_config:
-        keys = [key_config["shift_code"]]
-        using_shift_codes = True
-
-    keys = flatten(keys)
+    keys = flatten([key_config["shift_code" if using_shift_codes else "code"]])
     if not press:
         keys.reverse()
 
-    value = 1 if press else 0
-
-    if using_shift_codes:
-        revert_shift_value = 0 if press else 1
+    # shifted variants are typed without Shift, which is restored once the key is released
+    if using_shift_codes and press:
         for shift in shifts:
-            ui.write(e.EV_KEY, shift, revert_shift_value)
+            ui.write(e.EV_KEY, shift, 0)
 
     for key in keys:
-        ui.write(e.EV_KEY, key, value)
+        ui.write(e.EV_KEY, key, 1 if press else 0)
 
-    if using_shift_codes:
-        revert_shift_value = 1 if press else 0
+    if using_shift_codes and not press:
         for shift in shifts:
-            ui.write(e.EV_KEY, shift, revert_shift_value)
+            ui.write(e.EV_KEY, shift, 1)
 
 def create_keyboard():
     ui = None
@@ -195,6 +192,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
     GPIO.setup(cols, GPIO.IN, pull_up_down = GPIO.PUD_UP)
     pressed = set()
     shifts = set()
+    shifted_keys = set()
 
     while True:
         sleep(1/60)
@@ -218,7 +216,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
                     if mode_names:
                         print(keyboard[keycode]["name"], "down")
                     if mode_keyboard:
-                        press_key(ui, keycode, press=True, shifts=shifts)
+                        press_key(ui, keycode, press=True, shifts=shifts, shifted_keys = shifted_keys)
                         syn = True
 
                 elif not newval and keycode in pressed:
@@ -232,7 +230,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
                     if mode_names:
                         print(keyboard[keycode]["name"], "up")
                     if mode_keyboard:
-                        press_key(ui, keycode, press=False, shifts=shifts)
+                        press_key(ui, keycode, press=False, shifts=shifts, shifted_keys = shifted_keys)
                         syn = True
 
             # a released row floats low long enough to ghost on the next one, drive it high first
