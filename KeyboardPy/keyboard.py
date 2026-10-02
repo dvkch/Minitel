@@ -142,6 +142,14 @@ def flatten(data):
 
     return flat
 
+# Without diodes, 3 keys held at the corners of a rectangle make the 4th one look pressed. This happens
+# when two rows share at least two columns: a new press in such a configuration is ignored.
+def is_ambiguous(matrix, row, col):
+    for i in range(len(matrix)):
+        if i != row and matrix[i] & (1 << col) and matrix[i] & matrix[row] & ~(1 << col):
+            return True
+    return False
+
 def press_key(ui, keycode, press, shifts, shifted_keys):
     key_config = keyboard[keycode]
 
@@ -198,14 +206,23 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
         sleep(1/60)
         syn = False
 
+        matrix = [0] * len(rows)
         for i in range(len(rows)):
             GPIO.setup(rows[i], GPIO.OUT, initial = GPIO.LOW)
+            for j in range(len(cols)):
+                if GPIO.input(cols[j]) == GPIO.LOW:
+                    matrix[i] |= 1 << j
 
+            # a released row floats low long enough to ghost on the next one, drive it high first
+            GPIO.output(rows[i], GPIO.HIGH)
+            GPIO.setup(rows[i], GPIO.IN, pull_up_down = GPIO.PUD_UP)
+
+        for i in range(len(rows)):
             for j in range(len(cols)):
                 keycode = i * len(cols) + j
-                newval = GPIO.input(cols[j]) == GPIO.LOW
+                newval = bool(matrix[i] & (1 << j))
 
-                if  newval and not keycode in pressed:
+                if newval and not keycode in pressed and not is_ambiguous(matrix, i, j):
                     pressed.add(keycode)
                     is_shift = "is_shift" in keyboard[keycode] and keyboard[keycode]["is_shift"]
                     if is_shift:
@@ -216,7 +233,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
                     if mode_names:
                         print(keyboard[keycode]["name"], "down")
                     if mode_keyboard:
-                        press_key(ui, keycode, press=True, shifts=shifts, shifted_keys = shifted_keys)
+                        press_key(ui, keycode, press = True, shifts = shifts, shifted_keys = shifted_keys)
                         syn = True
 
                 elif not newval and keycode in pressed:
@@ -230,12 +247,8 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
                     if mode_names:
                         print(keyboard[keycode]["name"], "up")
                     if mode_keyboard:
-                        press_key(ui, keycode, press=False, shifts=shifts, shifted_keys = shifted_keys)
+                        press_key(ui, keycode, press = False, shifts = shifts, shifted_keys = shifted_keys)
                         syn = True
-
-            # a released row floats low long enough to ghost on the next one, drive it high first
-            GPIO.output(rows[i], GPIO.HIGH)
-            GPIO.setup(rows[i], GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         if syn:
             ui.syn()

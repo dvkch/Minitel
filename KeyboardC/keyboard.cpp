@@ -28,15 +28,15 @@ typedef struct {
 
 Key keyboard[ROWS * COLS] = {
     // Row 0
-    { "x0y0", "Left Shift",     {KEY_LEFTSHIFT},            {0},                                true },
+    { "x0y0", "Left Shift",     {KEY_LEFTSHIFT},            {},                                 true },
     { "x0y1", "W",              {KEY_Z},                    {},                                 false },
     { "x0y2", "B",              {KEY_B},                    {},                                 false },
     { "x0y3", "N",              {KEY_N},                    {},                                 false },
-    { "x0y4", "Right Shift",    {KEY_RIGHTSHIFT},           {0},                                true },
+    { "x0y4", "Right Shift",    {KEY_RIGHTSHIFT},           {},                                 true },
     { "x0y5", "V",              {KEY_V},                    {},                                 false },
     { "x0y6", "C",              {KEY_C},                    {},                                 false },
     { "x0y7", "X",              {KEY_X},                    {},                                 false },
-    { "x0y8", "<x0y8>",         {0},                        {0},                                false },
+    { "x0y8", "<x0y8>",         {},                         {},                                 false },
 
     // Row 1
     { "x1y0", "Q",              {KEY_A},                    {},                                 false },
@@ -47,10 +47,10 @@ Key keyboard[ROWS * COLS] = {
     { "x1y5", "1/`",            {KEY_KP1},                  {KEY_RIGHTALT, KEY_7},              false },
     { "x1y6", "2/(",            {KEY_KP2},                  {KEY_5},                            false },
     { "x1y7", "3/)",            {KEY_KP3},                  {KEY_MINUS},                        false },
-    { "x1y8", "<x1y8>",         {0},                        {0},                                false },
+    { "x1y8", "<x1y8>",         {},                         {},                                 false },
 
     // Row 2
-    { "x2y0", "Control",        {KEY_LEFTCTRL},             {0},                                false },
+    { "x2y0", "Control",        {KEY_LEFTCTRL},             {},                                 false },
     { "x2y1", "S",              {KEY_S},                    {},                                 false },
     { "x2y2", "F",              {KEY_F},                    {},                                 false },
     { "x2y3", "H",              {KEY_H},                    {},                                 false },
@@ -58,7 +58,7 @@ Key keyboard[ROWS * COLS] = {
     { "x2y5", "M",              {KEY_SEMICOLON},            {},                                 false },
     { "x2y6", "P",              {KEY_P},                    {},                                 false },
     { "x2y7", "O",              {KEY_O},                    {},                                 false },
-    { "x2y8", "<x2y8>",         {0},                        {0},                                false },
+    { "x2y8", "<x2y8>",         {},                         {},                                 false },
 
     // Row 3
     { "x3y0", "A",              {KEY_Q},                    {},                                 false },
@@ -69,10 +69,10 @@ Key keyboard[ROWS * COLS] = {
     { "x3y5", "Y",              {KEY_Y},                    {},                                 false },
     { "x3y6", "U",              {KEY_U},                    {},                                 false },
     { "x3y7", "I",              {KEY_I},                    {},                                 false },
-    { "x3y8", "<x3y8>",         {0},                        {0},                                false },
+    { "x3y8", "<x3y8>",         {},                         {},                                 false },
 
     // Row 4
-    { "x4y0", "Escape",         {KEY_ESC},                  {0},                                false },
+    { "x4y0", "Escape",         {KEY_ESC},                  {},                                 false },
     { "x4y1", ",/<",            {KEY_M},                    {KEY_102ND},                        false },
     { "x4y2", "./>",            {KEY_LEFTSHIFT, KEY_COMMA}, {KEY_LEFTSHIFT, KEY_102ND},         false },
     { "x4y3", "'/@",            {KEY_4},                    {KEY_RIGHTALT, KEY_0},              false },
@@ -80,51 +80,51 @@ Key keyboard[ROWS * COLS] = {
     { "x4y5", "-/=",            {KEY_6},                    {KEY_EQUAL},                        false },
     { "x4y6", ":/*",            {KEY_DOT},                  {KEY_BACKSLASH},                    false },
     { "x4y7", "?//",            {KEY_LEFTSHIFT, KEY_M},     {KEY_LEFTSHIFT, KEY_DOT},           false },
-    { "x4y8", "<x4y8>",         {0},                        {0},                                false },
+    { "x4y8", "<x4y8>",         {},                         {},                                 false },
 
     // Row 5
-    { "x5y0", "Connexion",      {KEY_F1},                   {0},                                false },
+    { "x5y0", "Connexion",      {KEY_F1},                   {},                                 false },
     { "x5y1", "Guide/¨",        {KEY_F3},                   {KEY_LEFTSHIFT, KEY_LEFTBRACE},     false },
     { "x5y2", "Correction/§",   {KEY_BACKSPACE},            {KEY_LEFTSHIFT, KEY_SLASH},         false },
-    { "x5y3", "Suite",          {KEY_FORWARD},              {0},                                false },
+    { "x5y3", "Suite",          {KEY_FORWARD},              {},                                 false },
     { "x5y4", "Envoi/}",        {KEY_LEFTMETA},             {KEY_RIGHTALT, KEY_EQUAL},          false },
     { "x5y5", "4/$",            {KEY_KP4},                  {KEY_RIGHTBRACE},                   false },
     { "x5y6", "5/%",            {KEY_KP5},                  {KEY_LEFTSHIFT, KEY_APOSTROPHE},    false },
     { "x5y7", "6/&",            {KEY_KP6},                  {KEY_1},                            false },
-    { "x5y8", "<x5y8>",         {0},                        {0},                                false },
+    { "x5y8", "<x5y8>",         {},                         {},                                 false },
 
     // Row 6
-    { "x6y0", "Fonction",       {KEY_LEFTALT},              {0},                                false },
+    { "x6y0", "Fonction",       {KEY_LEFTALT},              {},                                 false },
     { "x6y1", "Sommaire/^",     {KEY_F2},                   {KEY_LEFTBRACE},                    false },
     { "x6y2", "Annulation/\\",  {KEY_F4},                   {KEY_RIGHTALT, KEY_8},              false },
-    { "x6y3", "Retour",         {KEY_BACK},                 {0},                                false },
+    { "x6y3", "Retour",         {KEY_BACK},                 {},                                 false },
     { "x6y4", "Répétition/{",   {KEY_F5},                   {KEY_RIGHTALT, KEY_4},              false },
     { "x6y5", "7/!",            {KEY_KP7},                  {KEY_SLASH},                        false },
     { "x6y6", "8/\"",           {KEY_KP8},                  {KEY_3},                            false },
     { "x6y7", "9/#",            {KEY_KP9},                  {KEY_RIGHTALT, KEY_3},              false },
-    { "x6y8", "<x6y8>",         {0},                        {0},                                false },
+    { "x6y8", "<x6y8>",         {},                         {},                                 false },
 
     // Row 7
-    { "x7y0", "Up",             {KEY_UP},                   {0},                                false },
-    { "x7y1", "Down",           {KEY_DOWN},                 {0},                                false },
-    { "x7y2", "Left",           {KEY_LEFT},                 {0},                                false },
-    { "x7y3", "Right",          {KEY_RIGHT},                {0},                                false },
-    { "x7y4", "Return",         {KEY_ENTER},                {0},                                false },
+    { "x7y0", "Up",             {KEY_UP},                   {},                                 false },
+    { "x7y1", "Down",           {KEY_DOWN},                 {},                                 false },
+    { "x7y2", "Left",           {KEY_LEFT},                 {},                                 false },
+    { "x7y3", "Right",          {KEY_RIGHT},                {},                                 false },
+    { "x7y4", "Return",         {KEY_ENTER},                {},                                 false },
     { "x7y5", "NumLock/[",      {KEY_NUMLOCK},              {KEY_RIGHTALT, KEY_5},              false },
     { "x7y6", "0/|",            {KEY_KP0},                  {KEY_RIGHTALT, KEY_6},              false },
     { "x7y7", "Compose/]",      {KEY_RIGHTCTRL},            {KEY_RIGHTALT, KEY_MINUS},          false },
     { "x7y8", "Space/Tab",      {KEY_SPACE},                {KEY_TAB},                          false },
 
     // Row 8
-    { "x8y0", "<x8y0>",         {0},                        {0},                                false },
-    { "x8y1", "<x8y1>",         {0},                        {0},                                false },
-    { "x8y2", "<x8y2>",         {0},                        {0},                                false },
-    { "x8y3", "<x8y3>",         {0},                        {0},                                false },
-    { "x8y4", "<x8y4>",         {0},                        {0},                                false },
-    { "x8y5", "<x8y5>",         {0},                        {0},                                false },
-    { "x8y6", "<x8y6>",         {0},                        {0},                                false },
-    { "x8y7", "<x8y7>",         {0},                        {0},                                false },
-    { "x8y8", "<x8y8>",         {0},                        {0},                                false },
+    { "x8y0", "<x8y0>",         {},                         {},                                 false },
+    { "x8y1", "<x8y1>",         {},                         {},                                 false },
+    { "x8y2", "<x8y2>",         {},                         {},                                 false },
+    { "x8y3", "<x8y3>",         {},                         {},                                 false },
+    { "x8y4", "<x8y4>",         {},                         {},                                 false },
+    { "x8y5", "<x8y5>",         {},                         {},                                 false },
+    { "x8y6", "<x8y6>",         {},                         {},                                 false },
+    { "x8y7", "<x8y7>",         {},                         {},                                 false },
+    { "x8y8", "<x8y8>",         {},                         {},                                 false },
 };
 
 class Input {
@@ -133,38 +133,16 @@ class Input {
             fd = Input::create();
         }
 
-        void sendKey(int keycode, bool pressed) {
-            const Key& key_config = keyboard[keycode];
+        void send_key(int code, int value) {
+            struct input_event ev;
+            gettimeofday(&ev.time, NULL);
 
-            // the variant is chosen on press and reused on release, even if Shift changed meanwhile
-            if (pressed && !shifts.empty() && !key_config.shift_codes.empty()) {
-                shifted_keys.insert(keycode);
-            }
-            bool using_shift_codes = shifted_keys.count(keycode) > 0;
-            if (!pressed) {
-                shifted_keys.erase(keycode);
-            }
+            ev.type = EV_KEY;
+            ev.code = code;
+            ev.value = value;
 
-            std::vector<int> keys = using_shift_codes ? key_config.shift_codes : key_config.codes;
-            if (!pressed) {
-                std::reverse(keys.begin(), keys.end());
-            }
-
-            // shifted variants are typed without Shift, which is restored once the key is released
-            if (using_shift_codes && pressed) {
-                for (int shift : shifts) {
-                    this->input->send_key(shift, 0);
-                }
-            }
-
-            for (int key : keys) {
-                this->input->send_key(key, pressed ? 1 : 0);
-            }
-
-            if (using_shift_codes && !pressed) {
-                for (int shift : shifts) {
-                    this->input->send_key(shift, 1);
-                }
+            if (write(this->fd, &ev, sizeof(ev)) < 0) {
+                fprintf(stderr, "Error writing key event to uinput device\n");
             }
         }
 
@@ -258,22 +236,32 @@ class Keyboard {
                 usleep(1000000 / 60); // Sleep for 1/60 seconds
                 bool syn = false;
 
+                uint16_t matrix[ROWS];
                 for (int i = 0; i < ROWS; ++i) {
                     rpi_gpio_output(rows[i], 0);
                     rpi_gpio_set_fn(rows[i], OUTPUT);
                     usleep(3);
                     uint32_t all = rpi_gpio_input_all();
+                    // a released row floats low long enough to ghost on the next one, drive it high first
                     rpi_gpio_output(rows[i], 1);
                     rpi_gpio_set_fn(rows[i], INPUT);
 
+                    matrix[i] = 0;
+                    for (int j = 0; j < COLS; ++j) {
+                        if (!(all & (1 << cols[j]))) {
+                            matrix[i] |= 1 << j;
+                        }
+                    }
+                }
+
+                for (int i = 0; i < ROWS; ++i) {
                     for (int j = 0; j < COLS; ++j) {
                         int keycode = i * COLS + j;
-                        int newval = !(all & (1 << cols[j]));
+                        bool newval = matrix[i] & (1 << j);
 
-                        if (newval && pressed.find(keycode) == pressed.end()) {
+                        if (newval && pressed.find(keycode) == pressed.end() && !isAmbiguous(matrix, i, j)) {
                             this->pressed.insert(keycode);
-                            bool is_shift = keyboard[keycode].is_shift;
-                            if (is_shift) {
+                            if (keyboard[keycode].is_shift) {
                                 for (int code : keyboard[keycode].codes) {
                                     this->shifts.insert(code);
                                 }
@@ -286,15 +274,13 @@ class Keyboard {
                                 printf("%s down\n", keyboard[keycode].name);
                             }
                             if (this->input) {
-                                this->sendKey(keyboard[keycode], true);
+                                this->sendKey(keycode, true);
                                 syn = true;
                             }
-
                         }
                         else if (!newval && pressed.find(keycode) != pressed.end()) {
                             this->pressed.erase(keycode);
-                            bool is_shift = keyboard[keycode].is_shift;
-                            if (is_shift) {
+                            if (keyboard[keycode].is_shift) {
                                 for (int code : keyboard[keycode].codes) {
                                     this->shifts.erase(code);
                                 }
@@ -307,7 +293,7 @@ class Keyboard {
                                 printf("%s up\n", keyboard[keycode].name);
                             }
                             if (this->input) {
-                                this->sendKey(keyboard[keycode], false);
+                                this->sendKey(keycode, false);
                                 syn = true;
                             }
                         }
@@ -328,36 +314,48 @@ class Keyboard {
         std::set<int> shifts;
         std::set<int> shifted_keys;
 
-        void sendKey(const Key& key_config, bool pressed) {
-            std::vector<int> keys = key_config.codes;
-            bool using_shift_codes = false;
+        // Without diodes, 3 keys held at the corners of a rectangle make the 4th one look pressed. This happens
+        // when two rows share at least two columns: a new press in such a configuration is ignored.
+        static bool isAmbiguous(const uint16_t matrix[ROWS], int row, int col) {
+            for (int i = 0; i < ROWS; ++i) {
+                if (i != row && (matrix[i] & (1 << col)) && (matrix[i] & matrix[row] & ~(1 << col))) {
+                    return true;
+                }
+            }
+            return false;
+        }
 
-            if (!shifts.empty() && !key_config.shift_codes.empty()) {
-                keys = key_config.shift_codes;
-                using_shift_codes = true;
+        void sendKey(int keycode, bool pressed) {
+            const Key& key_config = keyboard[keycode];
+
+            // the variant is chosen on press and reused on release, even if Shift changed meanwhile
+            if (pressed && !shifts.empty() && !key_config.shift_codes.empty()) {
+                shifted_keys.insert(keycode);
+            }
+            bool using_shift_codes = shifted_keys.count(keycode) > 0;
+            if (!pressed) {
+                shifted_keys.erase(keycode);
             }
 
+            std::vector<int> keys = using_shift_codes ? key_config.shift_codes : key_config.codes;
             if (!pressed) {
                 std::reverse(keys.begin(), keys.end());
             }
 
-            int value = pressed ? 1 : 0;
-
-            if (using_shift_codes) {
-                int revert_shift_value = pressed ? 0 : 1;
+            // shifted variants are typed without Shift, which is restored once the key is released
+            if (using_shift_codes && pressed) {
                 for (int shift : shifts) {
-                    this->input->send_key(shift, revert_shift_value);
+                    this->input->send_key(shift, 0);
                 }
             }
 
             for (int key : keys) {
-                this->input->send_key(key, value);
+                this->input->send_key(key, pressed ? 1 : 0);
             }
 
-            if (using_shift_codes) {
-                int revert_shift_value = pressed ? 1 : 0;
+            if (using_shift_codes && !pressed) {
                 for (int shift : shifts) {
-                    this->input->send_key(shift, revert_shift_value);
+                    this->input->send_key(shift, 1);
                 }
             }
         }
