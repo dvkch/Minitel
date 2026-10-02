@@ -1,8 +1,9 @@
 [Unit]
 Description=Minitel Keyboard Service
+Conflicts=keyboard-py.service
 
 [Service]
-ExecStart=/usr/local/bin/keyboard keyboard
+ExecStart=/usr/local/bin/keyboard-c keyboard
 WorkingDirectory=/
 StandardOutput=inherit
 StandardError=inherit
