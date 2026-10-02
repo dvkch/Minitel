@@ -28,6 +28,7 @@ This is now my retro gaming station, and as any project should, this repo contai
 - [CRT](./CRT): Reusing the original CRT
 - [KeyboardC](./KeyboardC): User-land drivers in C++ to test and use the original keyboard. 
 - [KeyboardPy](./KeyboardPy): Python equivalent of KeyboardC, technically its ancestor, easier to modify if you'd like to play with the code
+- [Keyboard32](./Keyboard32): ESP32-S3 firmware acting as a USB keyboard for the original keyboard
 
 ## Useful Links
 

@@ -3,3 +3,6 @@
 
 # Builds
 KeyboardC/minitel-keyboard-c
+Keyboard32/.venv
+Keyboard32/.platformio
+Keyboard32/.pio
