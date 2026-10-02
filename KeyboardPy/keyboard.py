@@ -191,7 +191,7 @@ def create_keyboard():
 def run(ui, mode_coords, mode_names, mode_keyboard):
     GPIO.setwarnings(True)
     GPIO.setmode(GPIO.BCM)
-    GPIO.setup(rows, GPIO.IN)
+    GPIO.setup(rows, GPIO.IN, pull_up_down = GPIO.PUD_UP)
     GPIO.setup(cols, GPIO.IN, pull_up_down = GPIO.PUD_UP)
     pressed = set()
     shifts = set()
@@ -206,7 +206,7 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
             for j in range(len(cols)):
                 keycode = i * len(cols) + j
                 newval = GPIO.input(cols[j]) == GPIO.LOW
-    
+
                 if  newval and not keycode in pressed:
                     pressed.add(keycode)
                     is_shift = "is_shift" in keyboard[keycode] and keyboard[keycode]["is_shift"]
@@ -235,7 +235,9 @@ def run(ui, mode_coords, mode_names, mode_keyboard):
                         press_key(ui, keycode, press=False, shifts=shifts)
                         syn = True
 
-            GPIO.setup(rows[i], GPIO.IN)
+            # a released row floats low long enough to ghost on the next one, drive it high first
+            GPIO.output(rows[i], GPIO.HIGH)
+            GPIO.setup(rows[i], GPIO.IN, pull_up_down = GPIO.PUD_UP)
 
         if syn:
             ui.syn()
@@ -254,10 +256,10 @@ def main():
 
     if sys.argv[1] == "coords":
         print("Starting in key coords mode")
-        run(ui, mode_coords = True, mode_names = False, mode_keyboard = False)
+        run(None, mode_coords = True, mode_names = False, mode_keyboard = False)
     elif sys.argv[1] == "names":
         print("Starting in key names mode")
-        run(ui, mode_coords = False, mode_names = True, mode_keyboard = False)
+        run(None, mode_coords = False, mode_names = True, mode_keyboard = False)
     elif sys.argv[1] == "keyboard":
         print("Starting in UInput mode")
         ui = create_keyboard()
@@ -271,5 +273,3 @@ try:
 except KeyboardInterrupt:
     GPIO.setwarnings(False)
     GPIO.cleanup()
-
-

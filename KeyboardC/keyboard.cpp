@@ -29,21 +29,21 @@ typedef struct {
 Key keyboard[ROWS * COLS] = {
     // Row 0
     { "x0y0", "Left Shift",     {KEY_LEFTSHIFT},            {0},                                true },
-    { "x0y1", "W",              {KEY_Z},                    {0},                                false },
-    { "x0y2", "B",              {KEY_B},                    {0},                                false },
-    { "x0y3", "N",              {KEY_N},                    {0},                                false },
+    { "x0y1", "W",              {KEY_Z},                    {},                                 false },
+    { "x0y2", "B",              {KEY_B},                    {},                                 false },
+    { "x0y3", "N",              {KEY_N},                    {},                                 false },
     { "x0y4", "Right Shift",    {KEY_RIGHTSHIFT},           {0},                                true },
-    { "x0y5", "V",              {KEY_V},                    {0},                                false },
-    { "x0y6", "C",              {KEY_C},                    {0},                                false },
-    { "x0y7", "X",              {KEY_X},                    {0},                                false },
+    { "x0y5", "V",              {KEY_V},                    {},                                 false },
+    { "x0y6", "C",              {KEY_C},                    {},                                 false },
+    { "x0y7", "X",              {KEY_X},                    {},                                 false },
     { "x0y8", "<x0y8>",         {0},                        {0},                                false },
 
     // Row 1
-    { "x1y0", "Q",              {KEY_A},                    {0},                                false },
-    { "x1y1", "D",              {KEY_D},                    {0},                                false },
-    { "x1y2", "G",              {KEY_G},                    {0},                                false },
-    { "x1y3", "J",              {KEY_J},                    {0},                                false },
-    { "x1y4", "L",              {KEY_L},                    {0},                                false },
+    { "x1y0", "Q",              {KEY_A},                    {},                                 false },
+    { "x1y1", "D",              {KEY_D},                    {},                                 false },
+    { "x1y2", "G",              {KEY_G},                    {},                                 false },
+    { "x1y3", "J",              {KEY_J},                    {},                                 false },
+    { "x1y4", "L",              {KEY_L},                    {},                                 false },
     { "x1y5", "1/`",            {KEY_KP1},                  {KEY_RIGHTALT, KEY_7},              false },
     { "x1y6", "2/(",            {KEY_KP2},                  {KEY_5},                            false },
     { "x1y7", "3/)",            {KEY_KP3},                  {KEY_MINUS},                        false },
@@ -51,24 +51,24 @@ Key keyboard[ROWS * COLS] = {
 
     // Row 2
     { "x2y0", "Control",        {KEY_LEFTCTRL},             {0},                                false },
-    { "x2y1", "S",              {KEY_S},                    {0},                                false },
-    { "x2y2", "F",              {KEY_F},                    {0},                                false },
-    { "x2y3", "H",              {KEY_H},                    {0},                                false },
-    { "x2y4", "K",              {KEY_K},                    {0},                                false },
-    { "x2y5", "M",              {KEY_SEMICOLON},            {0},                                false },
-    { "x2y6", "P",              {KEY_P},                    {0},                                false },
-    { "x2y7", "O",              {KEY_O},                    {0},                                false },
+    { "x2y1", "S",              {KEY_S},                    {},                                 false },
+    { "x2y2", "F",              {KEY_F},                    {},                                 false },
+    { "x2y3", "H",              {KEY_H},                    {},                                 false },
+    { "x2y4", "K",              {KEY_K},                    {},                                 false },
+    { "x2y5", "M",              {KEY_SEMICOLON},            {},                                 false },
+    { "x2y6", "P",              {KEY_P},                    {},                                 false },
+    { "x2y7", "O",              {KEY_O},                    {},                                 false },
     { "x2y8", "<x2y8>",         {0},                        {0},                                false },
 
     // Row 3
-    { "x3y0", "A",              {KEY_Q},                    {0},                                false },
-    { "x3y1", "Z",              {KEY_W},                    {0},                                false },
-    { "x3y2", "E",              {KEY_E},                    {0},                                false },
-    { "x3y3", "R",              {KEY_R},                    {0},                                false },
-    { "x3y4", "T",              {KEY_T},                    {0},                                false },
-    { "x3y5", "Y",              {KEY_Y},                    {0},                                false },
-    { "x3y6", "U",              {KEY_U},                    {0},                                false },
-    { "x3y7", "I",              {KEY_I},                    {0},                                false },
+    { "x3y0", "A",              {KEY_Q},                    {},                                 false },
+    { "x3y1", "Z",              {KEY_W},                    {},                                 false },
+    { "x3y2", "E",              {KEY_E},                    {},                                 false },
+    { "x3y3", "R",              {KEY_R},                    {},                                 false },
+    { "x3y4", "T",              {KEY_T},                    {},                                 false },
+    { "x3y5", "Y",              {KEY_Y},                    {},                                 false },
+    { "x3y6", "U",              {KEY_U},                    {},                                 false },
+    { "x3y7", "I",              {KEY_I},                    {},                                 false },
     { "x3y8", "<x3y8>",         {0},                        {0},                                false },
 
     // Row 4
@@ -213,7 +213,7 @@ class Input {
 };
 
 class Keyboard {
-    public: 
+    public:
         Keyboard(bool printCoords, bool printNames, Input *input) {
             this->printCoords = printCoords;
             this->printNames = printNames;
@@ -226,7 +226,7 @@ class Keyboard {
                 return;
             }
             for (int i = 0; i < ROWS; i++) {
-                rpi_gpio_setup(rows[i], INPUT, PUD_OFF);
+                rpi_gpio_setup(rows[i], INPUT, PUD_UP);
             }
             for (int i = 0; i < COLS; i++) {
                 rpi_gpio_setup(cols[i], INPUT, PUD_UP);
@@ -241,6 +241,7 @@ class Keyboard {
                     rpi_gpio_set_fn(rows[i], OUTPUT);
                     usleep(3);
                     uint32_t all = rpi_gpio_input_all();
+                    rpi_gpio_output(rows[i], 1);
                     rpi_gpio_set_fn(rows[i], INPUT);
 
                     for (int j = 0; j < COLS; ++j) {
@@ -267,7 +268,7 @@ class Keyboard {
                                 syn = true;
                             }
 
-                        } 
+                        }
                         else if (!newval && pressed.find(keycode) != pressed.end()) {
                             this->pressed.erase(keycode);
                             bool is_shift = keyboard[keycode].is_shift;
@@ -335,7 +336,7 @@ class Keyboard {
                 for (int shift : shifts) {
                     this->input->send_key(shift, revert_shift_value);
                 }
-            }    
+            }
         }
 };
 
@@ -356,12 +357,12 @@ int main(int argc, char* argv[]) {
         printf("Starting in key coords mode\n");
         Keyboard *k = new Keyboard(true, false, NULL);
         k->run();
-    } 
+    }
     else if (strcmp(argv[1], "names") == 0) {
         printf("Starting in key names mode\n");
         Keyboard *k = new Keyboard(false, true, NULL);
         k->run();
-    } 
+    }
     else if (strcmp(argv[1], "keyboard") == 0) {
         printf("Starting in UInput mode\n");
         Input *input = (strcmp(argv[1], "keyboard") == 0) ? new Input() : NULL;
@@ -375,4 +376,3 @@ int main(int argc, char* argv[]) {
 
     return 0;
 }
-
