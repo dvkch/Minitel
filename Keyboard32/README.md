@@ -4,7 +4,11 @@ Firmware for an ESP32-S3 that will turn the Minitel keyboard into a USB keyboard
 
 ### Connection
 
-Use the ESP32's native USB port (labeled `USB`, not `COM`): it is used for flashing and for the serial console.
+Use the ESP32's native USB port (labeled `USB`, not `COM`): it is used for flashing, for the serial console and as the keyboard.
+
+The computer sees a single USB device, `1209:7501 Minitel Keyboard`, made of two parts: a serial port (`/dev/ttyACM0` on Linux) for the console, and a keyboard. For now the keyboard doesn't send any key.
+
+The `COM` port is optional: it shows the ESP32's boot and crash messages, printed before USB is started.
 
 ### Usage
 

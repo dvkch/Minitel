@@ -5,20 +5,21 @@
 struct ConsoleCommand {
     const char *name;
     const char *help;
-    void (*run)();
+    void (*run)(Print &out);
 };
 
-// Line based commands over the USB serial port
+// Line based commands over a serial stream, `help` is always available
 class Console {
 public:
-    Console(const ConsoleCommand *commands, size_t count);
+    Console(Stream &stream, const ConsoleCommand *commands, size_t count);
     void poll();
-    void printHelp() const;
 
 private:
+    Stream &stream;
     const ConsoleCommand *commands;
     size_t count;
     String line;
 
     void execute(const String &name);
+    void printHelp() const;
 };

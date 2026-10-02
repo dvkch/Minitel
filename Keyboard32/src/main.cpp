@@ -1,19 +1,18 @@
 #include <Arduino.h>
 #include "Console.h"
+#include "UsbDevice.h"
 
-static void printHelp();
-static void printVersion() { Serial.println("Keyboard32 " KEYBOARD32_VERSION); }
+static void printVersion(Print &out) { out.println("Keyboard32 " KEYBOARD32_VERSION); }
+
+static UsbDevice usb;
 
 static const ConsoleCommand commands[] = {
-    { "help",    "show this help",           printHelp },
     { "version", "show the firmware version", printVersion },
 };
-static Console console(commands, sizeof(commands) / sizeof(commands[0]));
-
-static void printHelp() { console.printHelp(); }
+static Console console(usb.serial, commands, sizeof(commands) / sizeof(commands[0]));
 
 void setup() {
-    Serial.begin(115200);
+    usb.begin();
 }
 
 void loop() {
