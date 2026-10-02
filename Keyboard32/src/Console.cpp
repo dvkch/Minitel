@@ -10,6 +10,11 @@ void Console::poll() {
             execute(line);
             line = "";
         }
+        else if (c == '\b' || c == 0x7f) {
+            if (!line.isEmpty()) {
+                line.remove(line.length() - 1);
+            }
+        }
         else if (line.length() < 64) {
             line += c;
         }
@@ -24,17 +29,23 @@ void Console::printHelp() const {
     }
 }
 
-void Console::execute(const String &name) {
-    if (name.isEmpty()) {
+void Console::execute(const String &line) {
+    if (line.isEmpty()) {
         return;
     }
+
+    int space = line.indexOf(' ');
+    String name = space < 0 ? line : line.substring(0, space);
+    String args = space < 0 ? "" : line.substring(space + 1);
+    args.trim();
+
     if (name == "help") {
         printHelp();
         return;
     }
     for (size_t i = 0; i < count; i++) {
         if (name == commands[i].name) {
-            commands[i].run(stream);
+            commands[i].run(stream, args);
             return;
         }
     }

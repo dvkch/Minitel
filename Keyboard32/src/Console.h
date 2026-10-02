@@ -5,7 +5,7 @@
 struct ConsoleCommand {
     const char *name;
     const char *help;
-    void (*run)(Print &out);
+    void (*run)(Print &out, const String &args);
 };
 
 // Line based commands over a serial stream, `help` is always available
@@ -20,6 +20,6 @@ private:
     size_t count;
     String line;
 
-    void execute(const String &name);
+    void execute(const String &line);
     void printHelp() const;
 };
