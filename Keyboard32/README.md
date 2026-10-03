@@ -51,6 +51,8 @@ Wiring: ESP32 GPIO 10 (left header, 16th pin) to the Pi's GPIO 3 (header pin 5, 
 
 To reboot instead of shutting down, set `HandlePowerKey=reboot` in `/etc/systemd/logind.conf`.
 
+Requires the Pi's EEPROM settings `WAKE_ON_GPIO=1` and `POWER_OFF_ON_HALT=0` (the defaults). Check with `sudo rpi-eeprom-config`, change with `sudo -E rpi-eeprom-config --edit`, then reboot.
+
 ### Keyboard layout
 
 The keyboard sends key positions, not characters: the computer must be set to the French AZERTY layout, with Right Ctrl as the Compose key (see [Keys](#keys)).
