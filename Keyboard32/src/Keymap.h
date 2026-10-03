@@ -3,7 +3,8 @@
 #include "KeyDef.h"
 #include "Matrix.h"
 
-// HID usages are positional and named after the US layout: the host must use the French AZERTY layout
+// HID usages are positional and named after the US layout: the host must use the French AZERTY layout.
+// Ctrl + I, H, J and X, printed in red as Tab, BS, LF and Can, need no mapping: terminals turn them into these control codes
 constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
     { // X0
         { "Left Shift",     MOD(LSHIFT),                        NONE                                },
@@ -64,7 +65,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "Connexion",      K(HID_KEY_F1),                      NONE                                },
         { "Guide/¨",        K(HID_KEY_F3),                      K(HID_KEY_BRACKET_LEFT, LSHIFT)     },
         { "Correction/§",   K(HID_KEY_BACKSPACE),               K(HID_KEY_SLASH, LSHIFT)            },
-        { "Suite",          CC(HID_USAGE_CONSUMER_AC_FORWARD),  NONE                                },
+        { "Suite",          CC(HID_USAGE_CONSUMER_AC_FORWARD),  NONE                                }, // browser forward
         { "Envoi/}",        MOD(LGUI),                          K(HID_KEY_EQUAL, RALT)              },
         { "4/$",            K(HID_KEY_KEYPAD_4),                K(HID_KEY_BRACKET_RIGHT)            },
         { "5/%",            K(HID_KEY_KEYPAD_5),                K(HID_KEY_APOSTROPHE, LSHIFT)       },
@@ -75,7 +76,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "Fonction",       MOD(LALT),                          NONE                                },
         { "Sommaire/^",     K(HID_KEY_F2),                      K(HID_KEY_BRACKET_LEFT)             },
         { "Annulation/\\",  K(HID_KEY_F4),                      K(HID_KEY_8, RALT)                  },
-        { "Retour",         CC(HID_USAGE_CONSUMER_AC_BACK),     NONE                                },
+        { "Retour",         CC(HID_USAGE_CONSUMER_AC_BACK),     NONE                                }, // browser back
         { "Répétition/{",   K(HID_KEY_F5),                      K(HID_KEY_4, RALT)                  },
         { "7/!",            K(HID_KEY_KEYPAD_7),                K(HID_KEY_SLASH)                    },
         { "8/\"",           K(HID_KEY_KEYPAD_8),                K(HID_KEY_3)                        },
@@ -90,7 +91,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "Return",         K(HID_KEY_ENTER),                   NONE                                },
         { "NumLock/[",      K(HID_KEY_NUM_LOCK),                K(HID_KEY_5, RALT)                  },
         { "0/|",            K(HID_KEY_KEYPAD_0),                K(HID_KEY_6, RALT)                  },
-        { "Compose/]",      MOD(RCTRL),                         K(HID_KEY_MINUS, RALT)              },
+        { "Compose/]",      MOD(RCTRL),                         K(HID_KEY_MINUS, RALT)              }, // Compose key with the host's compose:rctrl option
         { "Space/Tab",      K(HID_KEY_SPACE),                   K(HID_KEY_TAB)                      },
     },
     { // X8, no key found on this row so far

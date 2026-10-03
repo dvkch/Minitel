@@ -15,7 +15,16 @@ Connect the keyboard ribbon cable to these BCM GPIO IDs:
 
 The keyboard layout is French only, here are the best settings to use with this driver or its Python equivalent.
 
-Update keyboard config at `/etc/default/keyboard` (or use `sudo raspi-config` > Localization > Keyboard):
+On Raspberry Pi OS desktop (Wayland, labwc), update `~/.config/labwc/environment`, then log out and back in:
+
+```
+XKB_DEFAULT_MODEL=pc105
+XKB_DEFAULT_LAYOUT=fr
+XKB_DEFAULT_VARIANT=
+XKB_DEFAULT_OPTIONS=lv3:ralt_switch,compose:rctrl
+```
+
+For the console and X11, update `/etc/default/keyboard` (or use `sudo raspi-config` > Localization > Keyboard):
 
 ```
 # KEYBOARD CONFIGURATION FILE
@@ -29,6 +38,8 @@ XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 
 BACKSPACE="guess"
 ```
+
+The empty variant keeps dead keys (`^` then `e` types `ê`), and the Compose key (Right Ctrl, `#` on the Minitel keypad) types other characters: press and release it, then type two characters, e.g. `o` `e` for `œ`.
 
 Nota: The keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. Both drivers ignore new key presses in such a configuration.
 

@@ -28,7 +28,18 @@ Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rect
 
 ### Keyboard layout
 
-The keyboard sends key positions, not characters: the computer must be set to the French AZERTY layout. On Linux, in `/etc/default/keyboard` (or using `sudo raspi-config` > Localization > Keyboard):
+The keyboard sends key positions, not characters: the computer must be set to the French AZERTY layout, with Right Ctrl as the Compose key (see [Keys](#keys)).
+
+On Raspberry Pi OS desktop (Wayland, labwc), in `~/.config/labwc/environment`, then log out and back in:
+
+```
+XKB_DEFAULT_MODEL=pc105
+XKB_DEFAULT_LAYOUT=fr
+XKB_DEFAULT_VARIANT=
+XKB_DEFAULT_OPTIONS=lv3:ralt_switch,compose:rctrl
+```
+
+For the console and X11, in `/etc/default/keyboard` (or using `sudo raspi-config` > Localization > Keyboard), then reboot:
 
 ```
 XKBMODEL="pc105"
@@ -37,9 +48,41 @@ XKBVARIANT=""
 XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 ```
 
+The empty variant keeps dead keys: `^` and `¨` (Shift + Sommaire and Shift + Guide) wait for the next letter, e.g. `^` then `e` types `ê`, `^` then Space types `^` alone.
+
 The mapping is the same as the [KeyboardC](../KeyboardC) driver, and can be changed in `src/Keymap.h`: each key has a normal action, and optionally another one used when Shift is held, to type the symbol printed on the Minitel key. An invalid key code in this file fails the build.
 
-Digits are sent as numeric keypad keys: NumLock must be on to type them.
+### Keys
+
+Letters, digits and symbols type what is printed on the keys, Shift selecting the upper symbol. Digits are sent as numeric keypad keys: NumLock must be on to type them.
+
+Keys without a PC equivalent printed on them:
+
+| Minitel key   | Sends                                      | With Shift |
+|---------------|--------------------------------------------|------------|
+| Connexion     | F1                                         |            |
+| Sommaire      | F2                                         | `^`        |
+| Guide         | F3                                         | `¨`        |
+| Annulation    | F4                                         | `\`        |
+| Répétition    | F5                                         | `{`        |
+| Correction    | Backspace                                  | `§`        |
+| Envoi         | Super (Windows key)                        | `}`        |
+| Suite         | Forward media key, e.g. next page in a browser     |    |
+| Retour        | Back media key, e.g. previous page in a browser    |    |
+| Fnct          | Alt                                        |            |
+| `*` (keypad)  | NumLock                                    | `[`        |
+| `#` (keypad)  | Right Ctrl, used as the Compose key        | `]`        |
+| Espace        | Space                                      | Tab        |
+
+Printed in red, to be used with Ctrl:
+
+- Tab (I), BS (H), LF (J) and Can (X): nothing is mapped, terminals turn Ctrl + I, H, J and X into these control codes
+- £, Œ, œ, ç, ß, E.Page and Del: not supported, Ctrl + the key is sent instead, use Compose for the characters
+
+Not on the Minitel:
+
+- other characters: press and release Compose (`#`), then type two characters, e.g. `,` `c` for `ç`, `o` `e` for `œ`, `=` `e` for `€`, `L` `-` for `£`, `s` `s` for `ß`
+- F6 to F12, Home, End, Page Up, Page Down, Insert, Delete, AltGr and Caps Lock: not available
 
 ### Usage
 
