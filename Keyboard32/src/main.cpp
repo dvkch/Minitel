@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Console.h"
+#include "KeyLog.h"
 #include "KeyboardState.h"
-#include "Keymap.h"
 #include "Matrix.h"
 #include "UsbDevice.h"
 
@@ -11,6 +11,7 @@ static UsbDevice usb;
 static Matrix matrix;
 static KeyboardState keyboardState;
 static LogMode logMode = LogMode::Off;
+static uint8_t pressedCount = 0;
 
 static void printVersion(Print &out, const String &) {
     out.println("Keyboard32 " KEYBOARD32_VERSION);
@@ -43,23 +44,29 @@ static const ConsoleCommand commands[] = {
 static Console console(usb.serial, commands, sizeof(commands) / sizeof(commands[0]));
 
 static void onKey(uint8_t row, uint8_t col, bool pressed) {
+    KeyVariant variant = keyboardState.onKey(row, col, pressed);
+    if (pressed) {
+        pressedCount++;
+    }
+    else if (pressedCount > 0) {
+        pressedCount--;
+    }
+
     switch (logMode) {
         case LogMode::Off:
         case LogMode::Matrix:
-            break;
+            return;
         case LogMode::Coords:
-            usb.serial.printf("x%uy%u %s\n", row, col, pressed ? "down" : "up");
+            printKeyCoords(usb.serial, row, col, pressed);
             break;
         case LogMode::Names:
-            if (KEYMAP[row][col].name) {
-                usb.serial.printf("%s %s\n", KEYMAP[row][col].name, pressed ? "down" : "up");
-            }
-            else {
-                usb.serial.printf("x%uy%u (unmapped) %s\n", row, col, pressed ? "down" : "up");
-            }
+            printKeyName(usb.serial, row, col, pressed, variant);
             break;
     }
-    keyboardState.onKey(row, col, pressed);
+    // separates sequences of keys pressed together
+    if (pressedCount == 0) {
+        usb.serial.println("-----");
+    }
 }
 
 void setup() {
