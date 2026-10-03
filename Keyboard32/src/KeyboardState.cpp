@@ -82,6 +82,7 @@ void KeyboardState::flush(HidOutput &output) {
     uint8_t keys[6] = {};
     uint8_t keyCount = 0;
     uint16_t consumer = 0;
+    uint8_t system = 0;
     const HeldKey *latest = nullptr;
 
     for (uint8_t i = 0; i < heldCount; i++) {
@@ -99,6 +100,9 @@ void KeyboardState::flush(HidOutput &output) {
         if (action.consumer) {
             consumer = action.consumer;
         }
+        if (action.system) {
+            system = action.system;
+        }
         latest = &held[i];
     }
 
@@ -115,5 +119,8 @@ void KeyboardState::flush(HidOutput &output) {
     }
     if (consumer != sentConsumer && output.sendConsumer(consumer)) {
         sentConsumer = consumer;
+    }
+    if (system != sentSystem && output.sendSystem(system)) {
+        sentSystem = system;
     }
 }

@@ -45,7 +45,18 @@ void UsbDevice::begin() {
     serial.begin();
     keyboard.begin();
     consumer.begin();
+    systemControl.begin();
     USB.begin();
+}
+
+bool UsbDevice::sendSystem(uint8_t value) {
+    if (!USB) {
+        return false;
+    }
+    if (suspended) {
+        return true;
+    }
+    return value ? systemControl.press(value) : systemControl.release();
 }
 
 bool UsbDevice::isConnected() const {
@@ -60,9 +71,13 @@ bool UsbDevice::isNumLockOn() const {
     return numLockOn;
 }
 
+// a host asleep can't receive reports: they are dropped rather than retried
 bool UsbDevice::sendKeyboard(uint8_t mods, const uint8_t keys[6]) {
     if (!USB) {
         return false;
+    }
+    if (suspended) {
+        return true;
     }
     KeyReport report = { mods, 0, {} };
     memcpy(report.keys, keys, sizeof(report.keys));
@@ -73,6 +88,9 @@ bool UsbDevice::sendKeyboard(uint8_t mods, const uint8_t keys[6]) {
 bool UsbDevice::sendConsumer(uint16_t usage) {
     if (!USB) {
         return false;
+    }
+    if (suspended) {
+        return true;
     }
     return usage ? consumer.press(usage) : consumer.release();
 }

@@ -36,8 +36,20 @@ A WS2812 LED shows the keyboard state:
 | Pulsing yellow | Computer present but not running: boot menu loading, or shut down |
 | Green          | Computer running, NumLock on                           |
 | Yellow         | Computer running, NumLock off                          |
+| Blue           | Power keys held (Fnct + Connexion)                     |
 
 Wiring: data to GPIO 14 through a ~330 Ω resistor, power to 5V and GND. These are the last three pins of the left header. The `IN-OUT` jumper must be closed (solder bridge), otherwise 5V gets almost no power from USB.
+
+### Raspberry Pi power
+
+Fnct + Connexion turns the Pi off and on:
+
+- Pi running: sends the power key over USB. The Pi shuts down cleanly.
+- Pi halted (LED pulsing): pulls the Pi's GPIO 3 low. The Pi boots.
+
+Wiring: ESP32 GPIO 10 (left header, 16th pin) to the Pi's GPIO 3 (header pin 5, not pin 3). No resistor. Ground is shared through the USB cable.
+
+To reboot instead of shutting down, set `HandlePowerKey=reboot` in `/etc/systemd/logind.conf`.
 
 ### Keyboard layout
 
@@ -105,6 +117,7 @@ Fnct layer:
 | E             | €             |
 | Retour        | Volume down   |
 | Suite         | Volume up     |
+| Connexion     | Power: shut down the Pi, or start it once halted |
 
 Dead keys: `^`, `¨`, `´` and `` ` `` (on Suite) wait for the next letter. `^` then `e` types `ê`. `´` then `e` types `é`. `` ` `` then `a` types `à`. Then Space types the accent alone. The `` ` `` on 1 is not a dead key.
 
@@ -131,7 +144,7 @@ Labels to add to the keys. Blue: with Fnct. Yellow: with Shift. Keep the printed
 
 | Key           | Main label    | Small label       |
 |---------------|---------------|-------------------|
-| Connexion     | Menu          |                   |
+| Connexion     | Menu          | ⏻, blue           |
 | Sommaire      | Début ⇱       |                   |
 | Guide         | Fin ⇲         |                   |
 | Annulation    | Suppr         |                   |

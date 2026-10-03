@@ -26,6 +26,7 @@ private:
     uint8_t sentMods = 0;
     uint8_t sentKeys[6] = {};
     uint16_t sentConsumer = 0;
+    uint8_t sentSystem = 0;
 
     bool isHeld(uint8_t row, uint8_t col) const;
     bool isShiftHeld() const;

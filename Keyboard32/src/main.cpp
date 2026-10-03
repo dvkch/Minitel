@@ -1,6 +1,7 @@
 #include <Arduino.h>
 #include "Console.h"
 #include "KeyLog.h"
+#include "Keymap.h"
 #include "KeyboardState.h"
 #include "Matrix.h"
 #include "Pins.h"
@@ -17,6 +18,13 @@ static StatusLed led(LED_PIN, LED_COLOR_ORDER_RGB);
 static constexpr Color RED          = { 255, 0, 0 };
 static constexpr Color YELLOW       = { 255, 140, 0 };
 static constexpr Color GREEN        = { 0, 255, 0 };
+static constexpr Color BLUE         = { 0, 0, 255 };
+
+// how long the Pi's GPIO 3 is held low to wake it, it only needs a short pulse
+static constexpr uint32_t WAKE_PULSE_MS = 200;
+static uint32_t wakeStartedAt = 0;
+static bool isWaking = false;
+static bool isPowerHeld = false;
 
 static LogMode logMode = LogMode::Off;
 static uint8_t pressedCount = 0;
@@ -51,8 +59,34 @@ static const ConsoleCommand commands[] = {
 };
 static Console console(usb.serial, commands, sizeof(commands) / sizeof(commands[0]));
 
+// The line is never driven high: it floats at rest, held high by the Pi's pull-up, and is only pulled low
+static void startWake() {
+    digitalWrite(PI_WAKE_PIN, LOW);
+    pinMode(PI_WAKE_PIN, OUTPUT);
+    wakeStartedAt = millis();
+    isWaking = true;
+}
+
+static void updateWake() {
+    if (isWaking && millis() - wakeStartedAt >= WAKE_PULSE_MS) {
+        pinMode(PI_WAKE_PIN, INPUT);
+        isWaking = false;
+    }
+}
+
+// the power key is sent over USB while the Pi runs, a halted Pi doesn't listen to USB and is woken through GPIO 3
+static void onPowerKey(bool pressed) {
+    isPowerHeld = pressed;
+    if (pressed && (!usb.isConnected() || usb.isSuspended())) {
+        startWake();
+    }
+}
+
 static void onKey(uint8_t row, uint8_t col, bool pressed) {
     KeyVariant variant = keyboardState.onKey(row, col, pressed);
+    if (KEYMAP[row][col].action(variant).system == SYSTEM_POWER) {
+        onPowerKey(pressed);
+    }
     if (pressed) {
         pressedCount++;
     }
@@ -78,7 +112,10 @@ static void onKey(uint8_t row, uint8_t col, bool pressed) {
 }
 
 static void updateLed() {
-    if (!usb.isConnected()) {
+    if (isPowerHeld) {
+        led.show(BLUE);
+    }
+    else if (!usb.isConnected()) {
         led.show(RED);
     }
     else if (usb.isSuspended()) {
@@ -93,6 +130,7 @@ static void updateLed() {
 }
 
 void setup() {
+    pinMode(PI_WAKE_PIN, INPUT);
     usb.begin();
     matrix.begin();
 }
@@ -103,6 +141,7 @@ void loop() {
         usb.serial.println();
     }
     keyboardState.flush(usb);
+    updateWake();
     updateLed();
     console.poll();
     delay(1);

@@ -67,7 +67,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         {},
     },
     { // X5
-        { "Connexion",  MOD(LGUI, "Menu"),                          NONE,                                   NONE },
+        { "Connexion",  MOD(LGUI, "Menu"),                          NONE,                                   SYS(SYSTEM_POWER, "Power") }, // also wakes a halted Pi
         { "Guide",      K(HID_KEY_END, "End"),                      K(HID_KEY_BRACKET_LEFT, LSHIFT, "¨"),   NONE },
         { "Correction", K(HID_KEY_BACKSPACE, "Backspace"),          K(HID_KEY_SLASH, LSHIFT, "§"),          NONE },
         { "Suite",      CC(HID_USAGE_CONSUMER_AC_FORWARD, "Forward"), K(HID_KEY_BACKSLASH, RALT, "`"),      CC(HID_USAGE_CONSUMER_VOLUME_INCREMENT, "Vol+") }, // dead grave
