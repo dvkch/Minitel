@@ -72,8 +72,8 @@ Guide        Correction    Suite      Envoi
 
              ↓
 
-Home ^       Delete \      Back       Page Up {
-End ¨        Backspace §   Forward    Page Down }
+Home ^       Delete \      Back ´     Page Up {
+End ¨        Backspace §   Forward `  Page Down }
 ```
 
 Other keys:
@@ -93,7 +93,7 @@ Fnct layer:
 | Retour        | Volume down   |
 | Suite         | Volume up     |
 
-Dead keys: `^` and `¨` wait for the next letter. `^` then `e` types `ê`. `^` then Space types `^`.
+Dead keys: `^`, `¨`, `´` and `` ` `` (on Suite) wait for the next letter. `^` then `e` types `ê`. `´` then `e` types `é`. `` ` `` then `a` types `à`. Then Space types the accent alone. The `` ` `` on 1 is not a dead key.
 
 Compose: press and release `#`, then type two characters:
 
@@ -111,6 +111,28 @@ Labels printed in red, for Ctrl:
 - £, Œ, œ, ç, ß, E.Page, Del: not supported, use Compose for the characters.
 
 Not available: F10 to F12, Insert, Caps Lock, AltGr.
+
+### Stickers
+
+Labels to add to the keys. Blue: with Fnct. Yellow: with Shift. Keep the printed Shift symbols visible.
+
+| Key           | Main label    | Small label       |
+|---------------|---------------|-------------------|
+| Connexion     | Menu          |                   |
+| Sommaire      | Début ⇱       |                   |
+| Guide         | Fin ⇲         |                   |
+| Annulation    | Suppr         |                   |
+| Répétition    | Pg ⇞          |                   |
+| Envoi         | Pg ⇟          |                   |
+| `*` (keypad)  | Verr Num      |                   |
+| `#` (keypad)  | ⎄ (Compose)   |                   |
+| Fnct          |               | Fn, blue          |
+| Shift (both)  |               | mark, yellow      |
+| Espace        |               | Tab, yellow       |
+| Keypad 1 to 9 |               | F, blue           |
+| E             |               | €, blue           |
+| Retour        |               | Vol −, blue       |
+| Suite         |               | Vol +, blue       |
 
 ### Usage
 

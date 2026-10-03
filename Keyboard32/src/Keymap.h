@@ -70,7 +70,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "Connexion",      MOD(LGUI),                          NONE,                               NONE },
         { "Guide/¨",        K(HID_KEY_END),                     K(HID_KEY_BRACKET_LEFT, LSHIFT),    NONE },
         { "Correction/§",   K(HID_KEY_BACKSPACE),               K(HID_KEY_SLASH, LSHIFT),           NONE },
-        { "Suite",          CC(HID_USAGE_CONSUMER_AC_FORWARD),  NONE,                               CC(HID_USAGE_CONSUMER_VOLUME_INCREMENT) },
+        { "Suite/`",        CC(HID_USAGE_CONSUMER_AC_FORWARD),  K(HID_KEY_BACKSLASH, RALT),         CC(HID_USAGE_CONSUMER_VOLUME_INCREMENT) }, // dead grave
         { "Envoi/}",        K(HID_KEY_PAGE_DOWN),               K(HID_KEY_EQUAL, RALT),             NONE },
         { "4/$",            K(HID_KEY_KEYPAD_4),                K(HID_KEY_BRACKET_RIGHT),           K(HID_KEY_F4) },
         { "5/%",            K(HID_KEY_KEYPAD_5),                K(HID_KEY_APOSTROPHE, LSHIFT),      K(HID_KEY_F5) },
@@ -81,7 +81,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "Fonction",       MOD(LALT),                          NONE,                               NONE },
         { "Sommaire/^",     K(HID_KEY_HOME),                    K(HID_KEY_BRACKET_LEFT),            NONE },
         { "Annulation/\\",  K(HID_KEY_DELETE),                  K(HID_KEY_8, RALT),                 NONE },
-        { "Retour",         CC(HID_USAGE_CONSUMER_AC_BACK),     NONE,                               CC(HID_USAGE_CONSUMER_VOLUME_DECREMENT) },
+        { "Retour/´",       CC(HID_USAGE_CONSUMER_AC_BACK),     K(HID_KEY_M, RALT),                 CC(HID_USAGE_CONSUMER_VOLUME_DECREMENT) }, // dead acute
         { "Répétition/{",   K(HID_KEY_PAGE_UP),                 K(HID_KEY_4, RALT),                 NONE },
         { "7/!",            K(HID_KEY_KEYPAD_7),                K(HID_KEY_SLASH),                   K(HID_KEY_F7) },
         { "8/\"",           K(HID_KEY_KEYPAD_8),                K(HID_KEY_3),                       K(HID_KEY_F8) },
