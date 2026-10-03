@@ -1,12 +1,15 @@
 #include <Arduino.h>
 #include "Console.h"
+#include "KeyboardState.h"
+#include "Keymap.h"
 #include "Matrix.h"
 #include "UsbDevice.h"
 
-enum class LogMode { Off, Coords, Matrix };
+enum class LogMode { Off, Coords, Names, Matrix };
 
 static UsbDevice usb;
 static Matrix matrix;
+static KeyboardState keyboardState;
 static LogMode logMode = LogMode::Off;
 
 static void printVersion(Print &out, const String &) {
@@ -17,6 +20,9 @@ static void setLogMode(Print &out, const String &args) {
     if (args == "coords") {
         logMode = LogMode::Coords;
     }
+    else if (args == "names") {
+        logMode = LogMode::Names;
+    }
     else if (args == "matrix") {
         logMode = LogMode::Matrix;
     }
@@ -24,15 +30,15 @@ static void setLogMode(Print &out, const String &args) {
         logMode = LogMode::Off;
     }
     else {
-        out.printf("Unknown log mode '%s', use: log coords|matrix|off\n", args.c_str());
+        out.printf("Unknown log mode '%s', use: log coords|names|matrix|off\n", args.c_str());
         return;
     }
     out.printf("Logging %s\n", args.c_str());
 }
 
 static const ConsoleCommand commands[] = {
-    { "version", "show the firmware version",                           printVersion },
-    { "log",     "print key presses: log coords, log matrix, log off",  setLogMode },
+    { "version", "show the firmware version",                                       printVersion },
+    { "log",     "print key presses: log coords, log names, log matrix, log off",   setLogMode },
 };
 static Console console(usb.serial, commands, sizeof(commands) / sizeof(commands[0]));
 
@@ -44,7 +50,16 @@ static void onKey(uint8_t row, uint8_t col, bool pressed) {
         case LogMode::Coords:
             usb.serial.printf("x%uy%u %s\n", row, col, pressed ? "down" : "up");
             break;
+        case LogMode::Names:
+            if (KEYMAP[row][col].name) {
+                usb.serial.printf("%s %s\n", KEYMAP[row][col].name, pressed ? "down" : "up");
+            }
+            else {
+                usb.serial.printf("x%uy%u (unmapped) %s\n", row, col, pressed ? "down" : "up");
+            }
+            break;
     }
+    keyboardState.onKey(row, col, pressed);
 }
 
 void setup() {
@@ -57,6 +72,7 @@ void loop() {
         matrix.print(usb.serial);
         usb.serial.println();
     }
+    keyboardState.flush(usb);
     console.poll();
     delay(1);
 }

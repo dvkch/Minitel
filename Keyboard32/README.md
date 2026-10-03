@@ -1,12 +1,12 @@
 # Minitel/Keyboard32
 
-Firmware for an ESP32-S3 that will turn the Minitel keyboard into a USB keyboard. Tested on an ESP32-S3-DevKitC-1 N16R8.
+Firmware for an ESP32-S3 that turns the Minitel keyboard into a USB keyboard. Tested on an ESP32-S3-DevKitC-1 N16R8.
 
 ### Connection
 
 Use the ESP32's native USB port (labeled `USB`, not `COM`): it is used for flashing, for the serial console and as the keyboard.
 
-The computer sees a single USB device, `1209:7501 Minitel Keyboard`, made of two parts: a serial port (`/dev/ttyACM0` on Linux) for the console, and a keyboard. For now the keyboard doesn't send any key.
+The computer sees a single USB device, `1209:7501 Minitel Keyboard`, made of two parts: a serial port (`/dev/ttyACM0` on Linux) for the console, and a keyboard with media keys (used by `Suite` and `Retour`).
 
 The `COM` port is optional: it shows the ESP32's boot and crash messages, printed before USB is started.
 
@@ -25,6 +25,21 @@ Connect the keyboard ribbon cable to these ESP32 GPIOs (labels as printed on the
 Rows (X) are on the left header, contiguous from the 4th pin. Columns (Y) are on the right header, from the 4th to the 10th pin, then the 17th and 18th. The pins in between can't be used: GPIO 35 to 37 are connected to the PSRAM inside the module, GPIO 0 and 45 select the boot mode, GPIO 48 drives the onboard RGB LED. No key has been found on X8 so far, it is wired anyway.
 
 Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. New key presses in such a configuration are ignored.
+
+### Keyboard layout
+
+The keyboard sends key positions, not characters: the computer must be set to the French AZERTY layout. On Linux, in `/etc/default/keyboard` (or using `sudo raspi-config` > Localization > Keyboard):
+
+```
+XKBMODEL="pc105"
+XKBLAYOUT="fr"
+XKBVARIANT=""
+XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
+```
+
+The mapping is the same as the [KeyboardC](../KeyboardC) driver, and can be changed in `src/Keymap.h`: each key has a normal action, and optionally another one used when Shift is held, to type the symbol printed on the Minitel key. An invalid key code in this file fails the build.
+
+Digits are sent as numeric keypad keys: NumLock must be on to type them.
 
 ### Usage
 
@@ -58,5 +73,6 @@ Open the console using `make monitor`, then type a command followed by `Enter`:
 - `help`: list the available commands
 - `version`: show the firmware version
 - `log coords`: print each key press and release as its matrix position, e.g. `x3y1 down` for Z
+- `log names`: print each key press and release as its name in the keymap, e.g. `Z down`
 - `log matrix`: print the state of the 81 matrix positions at each change, `#` for pressed keys, `?` for keys read as pressed but ignored as ghosts, `.` for released keys
 - `log off`: stop printing key presses

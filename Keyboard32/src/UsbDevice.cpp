@@ -13,5 +13,23 @@ void UsbDevice::begin() {
 
     serial.begin();
     keyboard.begin();
+    consumer.begin();
     USB.begin();
+}
+
+bool UsbDevice::sendKeyboard(uint8_t mods, const uint8_t keys[6]) {
+    if (!USB) {
+        return false;
+    }
+    KeyReport report = { mods, 0, {} };
+    memcpy(report.keys, keys, sizeof(report.keys));
+    keyboard.sendReport(&report);
+    return true;
+}
+
+bool UsbDevice::sendConsumer(uint16_t usage) {
+    if (!USB) {
+        return false;
+    }
+    return usage ? consumer.press(usage) : consumer.release();
 }
