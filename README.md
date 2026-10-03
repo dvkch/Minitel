@@ -40,11 +40,16 @@ This is now my retro gaming station, and as any project should, this repo contai
   - <https://sourceforge.net/projects/pinn/>
   - <https://github.com/procount/pinn>
 
-- Gaming on the RPi:
-  - <https://chimeraos.org/>
+- Gaming distributions:
   - <https://www.recalbox.com/>
+  - <https://chimeraos.org/>
+
+- Gaming software
   - [Doom](https://pimylifeup.com/raspberry-pi-doom/)
-  - [Box64 x Wine](https://github.com/ptitSeb/box64/blob/main/docs/X64WINE.md)
+  - [Box64 x Wine](https://github.com/ptitSeb/box64)
+    - Install [Pi-Apps](https://github.com/Botspot/pi-apps)
+    - In Pi-Apps, install **Wine (x64)**
+    - Run a game with `wine game.exe`, configure with `winecfg`
 
 - SuperDrive
   - Apple SuperDrive requires specific commands to enable it, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068).
