@@ -4,6 +4,9 @@
 
 void KeyboardState::onKey(uint8_t row, uint8_t col, bool pressed) {
     if (!pressed) {
+        if (row == FN_ROW && col == FN_COL) {
+            fnUsedAsAlt = false;
+        }
         for (uint8_t i = 0; i < heldCount; i++) {
             if (held[i].row == row && held[i].col == col) {
                 memmove(&held[i], &held[i + 1], (heldCount - i - 1) * sizeof(HeldKey));
@@ -19,9 +22,34 @@ void KeyboardState::onKey(uint8_t row, uint8_t col, bool pressed) {
         return;
     }
 
-    // the variant is chosen on press and kept until release, even if Shift changes meanwhile
-    bool isShifted = isShiftHeld() && !def.shifted.isEmpty();
-    held[heldCount++] = { row, col, isShifted ? def.shifted : def.normal, isShifted };
+    // the variant is chosen on press and kept until release, even if Shift or Fnct change meanwhile
+    HeldKey key = { row, col, def.normal, 0 };
+    bool isFnHeld = isHeld(FN_ROW, FN_COL);
+    if (isFnHeld && !def.fn.isEmpty()) {
+        key.action = def.fn;
+        key.removedMods = LALT;
+    }
+    else {
+        // Fnct only sends Alt once combined with a key without Fnct action, then until released. Sending it
+        // on press would make apps see a lone Alt press before F1, and open their menu bar
+        if (isFnHeld) {
+            fnUsedAsAlt = true;
+        }
+        if (isShiftHeld() && !def.shifted.isEmpty()) {
+            key.action = def.shifted;
+            key.removedMods = SHIFTS;
+        }
+    }
+    held[heldCount++] = key;
+}
+
+bool KeyboardState::isHeld(uint8_t row, uint8_t col) const {
+    for (uint8_t i = 0; i < heldCount; i++) {
+        if (held[i].row == row && held[i].col == col) {
+            return true;
+        }
+    }
+    return false;
 }
 
 bool KeyboardState::isShiftHeld() const {
@@ -43,7 +71,10 @@ void KeyboardState::flush(HidOutput &output) {
     for (uint8_t i = 0; i < heldCount; i++) {
         const KeyAction &action = held[i].action;
         if (action.isModifier()) {
-            mods |= action.mods;
+            bool isFn = held[i].row == FN_ROW && held[i].col == FN_COL;
+            if (!isFn || fnUsedAsAlt) {
+                mods |= action.mods;
+            }
             continue;
         }
         if (action.key && keyCount < sizeof(keys)) {
@@ -58,9 +89,7 @@ void KeyboardState::flush(HidOutput &output) {
     // the most recently pressed key decides the modifiers: a shifted variant is typed
     // without Shift, and a key can add its own modifiers, e.g. Shift for "."
     if (latest) {
-        if (latest->isShiftedVariant) {
-            mods &= ~SHIFTS;
-        }
+        mods &= ~latest->removedMods;
         mods |= latest->action.mods;
     }
 

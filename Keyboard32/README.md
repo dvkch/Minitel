@@ -48,41 +48,69 @@ XKBVARIANT=""
 XKBOPTIONS="lv3:ralt_switch,compose:rctrl"
 ```
 
-The empty variant keeps dead keys: `^` and `¨` (Shift + Sommaire and Shift + Guide) wait for the next letter, e.g. `^` then `e` types `ê`, `^` then Space types `^` alone.
+The empty variant keeps dead keys (see [Keys](#keys)).
 
-The mapping is the same as the [KeyboardC](../KeyboardC) driver, and can be changed in `src/Keymap.h`: each key has a normal action, and optionally another one used when Shift is held, to type the symbol printed on the Minitel key. An invalid key code in this file fails the build.
+The mapping is defined in `src/Keymap.h`. Each key has a normal action, and optionally a Shift and a Fnct one. An invalid key code in this file fails the build.
 
 ### Keys
 
-Letters, digits and symbols type what is printed on the keys, Shift selecting the upper symbol. Digits are sent as numeric keypad keys: NumLock must be on to type them.
+Rules:
 
-Keys without a PC equivalent printed on them:
+- Keys type what is printed on them.
+- Shift types the upper symbol.
+- Keypad digits need NumLock on.
+- Fnct + a key without Fnct action acts as Alt.
+- Compose types any other character.
 
-| Minitel key   | Sends                                      | With Shift |
-|---------------|--------------------------------------------|------------|
-| Connexion     | F1                                         |            |
-| Sommaire      | F2                                         | `^`        |
-| Guide         | F3                                         | `¨`        |
-| Annulation    | F4                                         | `\`        |
-| Répétition    | F5                                         | `{`        |
-| Correction    | Backspace                                  | `§`        |
-| Envoi         | Super (Windows key)                        | `}`        |
-| Suite         | Forward media key, e.g. next page in a browser     |    |
-| Retour        | Back media key, e.g. previous page in a browser    |    |
-| Fnct          | Alt                                        |            |
-| `*` (keypad)  | NumLock                                    | `[`        |
-| `#` (keypad)  | Right Ctrl, used as the Compose key        | `]`        |
-| Espace        | Space                                      | Tab        |
+Function keys, with the symbol typed with Shift:
 
-Printed in red, to be used with Ctrl:
+```
+Connexion    →  Super (menu)
 
-- Tab (I), BS (H), LF (J) and Can (X): nothing is mapped, terminals turn Ctrl + I, H, J and X into these control codes
-- £, Œ, œ, ç, ß, E.Page and Del: not supported, Ctrl + the key is sent instead, use Compose for the characters
+Sommaire     Annulation    Retour     Répétition
+Guide        Correction    Suite      Envoi
 
-Not on the Minitel:
+             ↓
 
-- other characters: press and release Compose (`#`), then type two characters, e.g. `,` `c` for `ç`, `o` `e` for `œ`, `=` `e` for `€`, `L` `-` for `£`, `s` `s` for `ß`
-- F6 to F12, Home, End, Page Up, Page Down, Insert, Delete, AltGr and Caps Lock: not available
+Home ^       Delete \      Back       Page Up {
+End ¨        Backspace §   Forward    Page Down }
+```
+
+Other keys:
+
+| Key           | Sends         | With Shift |
+|---------------|---------------|------------|
+| `*` (keypad)  | NumLock       | `[`        |
+| `#` (keypad)  | Compose       | `]`        |
+| Espace        | Space         | Tab        |
+
+Fnct layer:
+
+| Fnct +        | Sends         |
+|---------------|---------------|
+| 1 to 9        | F1 to F9      |
+| E             | €             |
+| Retour        | Volume down   |
+| Suite         | Volume up     |
+
+Dead keys: `^` and `¨` wait for the next letter. `^` then `e` types `ê`. `^` then Space types `^`.
+
+Compose: press and release `#`, then type two characters:
+
+| Type          | Gives |
+|---------------|-------|
+| `o` `e`       | œ     |
+| `,` `c`       | ç     |
+| `=` `e`       | €     |
+| `L` `-`       | £     |
+| `s` `s`       | ß     |
+
+Labels printed in red, for Ctrl:
+
+- Tab (I), BS (H), LF (J), Can (X): work in terminals, as standard control codes.
+- £, Œ, œ, ç, ß, E.Page, Del: not supported, use Compose for the characters.
+
+Not available: F10 to F12, Insert, Caps Lock, AltGr.
 
 ### Usage
 

@@ -26,6 +26,7 @@ struct KeyDef {
     const char *name;
     KeyAction normal;
     KeyAction shifted;  // empty: the normal action is sent, with Shift still held
+    KeyAction fn;       // empty: the normal action is sent, with Fnct acting as Alt
 };
 
 constexpr KeyAction NONE = {};
