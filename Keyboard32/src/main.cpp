@@ -3,6 +3,8 @@
 #include "KeyLog.h"
 #include "KeyboardState.h"
 #include "Matrix.h"
+#include "Pins.h"
+#include "StatusLed.h"
 #include "UsbDevice.h"
 
 enum class LogMode { Off, Coords, Names, Matrix };
@@ -10,6 +12,13 @@ enum class LogMode { Off, Coords, Names, Matrix };
 static UsbDevice usb;
 static Matrix matrix;
 static KeyboardState keyboardState;
+static StatusLed led(LED_PIN);
+
+static constexpr Color RED          = { 255, 0, 0 };
+static constexpr Color YELLOW       = { 255, 140, 0 };
+static constexpr Color DIM_YELLOW   = { 64, 35, 0 };
+static constexpr Color GREEN        = { 0, 255, 0 };
+
 static LogMode logMode = LogMode::Off;
 static uint8_t pressedCount = 0;
 
@@ -69,6 +78,21 @@ static void onKey(uint8_t row, uint8_t col, bool pressed) {
     }
 }
 
+static void updateLed() {
+    if (!usb.isConnected()) {
+        led.show(RED);
+    }
+    else if (usb.isSuspended()) {
+        led.show(DIM_YELLOW);
+    }
+    else if (usb.isNumLockOn()) {
+        led.show(GREEN);
+    }
+    else {
+        led.show(YELLOW);
+    }
+}
+
 void setup() {
     usb.begin();
     matrix.begin();
@@ -80,6 +104,7 @@ void loop() {
         usb.serial.println();
     }
     keyboardState.flush(usb);
+    updateLed();
     console.poll();
     delay(1);
 }

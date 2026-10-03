@@ -4,6 +4,34 @@
 static constexpr uint16_t USB_VENDOR_ID  = 0x1209;
 static constexpr uint16_t USB_PRODUCT_ID = 0x7501;
 
+// written by the USB event task, read from the main loop
+static volatile bool suspended = false;
+static volatile bool numLockOn = false;
+
+static void onUsbEvent(void *, esp_event_base_t, int32_t id, void *) {
+    switch (id) {
+        case ARDUINO_USB_SUSPEND_EVENT:
+            suspended = true;
+            break;
+        case ARDUINO_USB_RESUME_EVENT:
+        case ARDUINO_USB_STARTED_EVENT:
+            suspended = false;
+            break;
+        case ARDUINO_USB_STOPPED_EVENT:
+            suspended = false;
+            numLockOn = false;
+            break;
+        default:
+            break;
+    }
+}
+
+static void onKeyboardEvent(void *, esp_event_base_t, int32_t id, void *data) {
+    if (id == ARDUINO_USB_HID_KEYBOARD_LED_EVENT) {
+        numLockOn = static_cast<arduino_usb_hid_keyboard_event_data_t *>(data)->numlock;
+    }
+}
+
 void UsbDevice::begin() {
     // the identity can only be changed before USB is started
     USB.VID(USB_VENDOR_ID);
@@ -11,10 +39,25 @@ void UsbDevice::begin() {
     USB.manufacturerName("Minitel");
     USB.productName("Minitel Keyboard");
 
+    USB.onEvent(onUsbEvent);
+    keyboard.onEvent(ARDUINO_USB_HID_KEYBOARD_LED_EVENT, onKeyboardEvent);
+
     serial.begin();
     keyboard.begin();
     consumer.begin();
     USB.begin();
+}
+
+bool UsbDevice::isConnected() const {
+    return USB;
+}
+
+bool UsbDevice::isSuspended() const {
+    return suspended;
+}
+
+bool UsbDevice::isNumLockOn() const {
+    return numLockOn;
 }
 
 bool UsbDevice::sendKeyboard(uint8_t mods, const uint8_t keys[6]) {

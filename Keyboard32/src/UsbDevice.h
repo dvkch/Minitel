@@ -15,4 +15,9 @@ public:
     void begin();
     bool sendKeyboard(uint8_t mods, const uint8_t keys[6]) override;
     bool sendConsumer(uint16_t usage) override;
+
+    // host state, updated by USB events
+    bool isConnected() const;
+    bool isSuspended() const;
+    bool isNumLockOn() const;
 };

@@ -26,6 +26,19 @@ Rows (X) are on the left header, contiguous from the 4th pin. Columns (Y) are on
 
 Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. New key presses in such a configuration are ignored.
 
+### Status LED
+
+A WS2812 LED shows the keyboard state:
+
+| Color        | State                                 |
+|--------------|---------------------------------------|
+| Red          | No computer connected: off or booting |
+| Green        | Computer connected, NumLock on        |
+| Yellow       | Computer connected, NumLock off       |
+| Dim yellow   | Computer asleep                       |
+
+Wiring: data to GPIO 14 through a ~330 Ω resistor, power to 5V and GND. These are the last three pins of the left header. Colors and brightness (20%) are set in `src/main.cpp` and `src/StatusLed.cpp`.
+
 ### Keyboard layout
 
 The keyboard sends key positions, not characters: the computer must be set to the French AZERTY layout, with Right Ctrl as the Compose key (see [Keys](#keys)).
