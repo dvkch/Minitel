@@ -12,11 +12,10 @@ enum class LogMode { Off, Coords, Names, Matrix };
 static UsbDevice usb;
 static Matrix matrix;
 static KeyboardState keyboardState;
-static StatusLed led(LED_PIN);
+static StatusLed led(LED_PIN, LED_COLOR_ORDER_RGB);
 
 static constexpr Color RED          = { 255, 0, 0 };
 static constexpr Color YELLOW       = { 255, 140, 0 };
-static constexpr Color DIM_YELLOW   = { 64, 35, 0 };
 static constexpr Color GREEN        = { 0, 255, 0 };
 
 static LogMode logMode = LogMode::Off;
@@ -83,7 +82,7 @@ static void updateLed() {
         led.show(RED);
     }
     else if (usb.isSuspended()) {
-        led.show(DIM_YELLOW);
+        led.show(YELLOW, true);
     }
     else if (usb.isNumLockOn()) {
         led.show(GREEN);

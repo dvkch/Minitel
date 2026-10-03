@@ -30,14 +30,14 @@ Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rect
 
 A WS2812 LED shows the keyboard state:
 
-| Color        | State                                 |
-|--------------|---------------------------------------|
-| Red          | No computer connected: off or booting |
-| Green        | Computer connected, NumLock on        |
-| Yellow       | Computer connected, NumLock off       |
-| Dim yellow   | Computer asleep                       |
+| Color          | State                                                  |
+|----------------|--------------------------------------------------------|
+| Red            | No computer connected: off or booting                  |
+| Pulsing yellow | Computer present but not running: boot menu loading, or shut down |
+| Green          | Computer running, NumLock on                           |
+| Yellow         | Computer running, NumLock off                          |
 
-Wiring: data to GPIO 14 through a ~330 Ω resistor, power to 5V and GND. These are the last three pins of the left header. Colors and brightness (20%) are set in `src/main.cpp` and `src/StatusLed.cpp`.
+Wiring: data to GPIO 14 through a ~330 Ω resistor, power to 5V and GND. These are the last three pins of the left header. The `IN-OUT` jumper must be closed (solder bridge), otherwise 5V gets almost no power from USB.
 
 ### Keyboard layout
 
