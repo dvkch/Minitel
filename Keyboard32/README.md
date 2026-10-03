@@ -166,11 +166,11 @@ Open the console using `make monitor`, then type a command followed by `Enter`:
 - `help`: list the available commands
 - `version`: show the firmware version
 - `log coords`: print each key press and release as its matrix position
-- `log names`: print each key press and release with its possible usages, the one sent in brackets
+- `log names`: print each key press and release with its possible usages, the one sent highlighted
 - `log matrix`: print the state of the 81 matrix positions at each change, `#` for pressed keys, `?` for keys read as pressed but ignored as ghosts, `.` for released keys
 - `log off`: stop printing key presses
 
-`log coords` and `log names` print `-----` once all keys are released. Example of `log names`, for Shift + Sommaire:
+`log coords` and `log names` print `-----` once all keys are released. Example of `log names`, for Shift + Sommaire, the highlighted usages being `Shift`, then `Shift: ^`:
 
 ```
 DOWN  Shift:       [Shift]        Shift: -      Fnct: -
@@ -179,5 +179,7 @@ UP    Sommaire:     Home         [Shift: ^]     Fnct: -
 UP    Shift:       [Shift]        Shift: -      Fnct: -
 -----
 ```
+
+The logs use ANSI colors. Don't add the `default` filter to `monitor_filters`, it strips them and leaves stray characters.
 
 A `-` usage means the normal one is sent instead, with Shift or Fnct still held.
