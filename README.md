@@ -51,9 +51,16 @@ This is now my retro gaming station, and as any project should, this repo contai
     - In Pi-Apps, install **Wine (x64)**
     - Run a game with `wine game.exe`, configure with `winecfg`
 
+
 - SuperDrive
-  - Apple SuperDrive requires specific commands to enable it, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068).
-  - Adapt using the proper USB vendor/product IDs, in our case: `ID 13fd:0840 Initio Corporation INIC-1618L SATA`
+  - Currently using a 2009 MacBook Pro SuperDrive in a SATA-USB enclosure kit (`13fd:0840 Initio Corporation INIC-1618L SATA`), powered from the internal 5V via a USB Y cable. It works out of the box.
+  - If you're using an external Apple USB SuperDrive (`05ac:1500`), you'll need to send a wake command before it accepts discs, see [this link](https://gist.github.com/AnnoyingTechnology/dbaae864822cf08372f0aafe64a63477?permalink_comment_id=3912068#gistcomment-3912068). You can do this automatically using the following udev rule:
+
+    ```sh
+    sudo apt install sg3-utils
+    echo 'ACTION=="add", SUBSYSTEM=="block", KERNEL=="sr[0-9]*", ATTRS{idVendor}=="05ac", ATTRS{idProduct}=="1500", RUN+="/usr/bin/sg_raw --cmdset=1 /dev/%k EA 00 00 00 00 00 01"' | sudo tee /etc/udev/rules.d/90-superdrive.rules
+    sudo reboot
+    ```
 
 - HDMI Overscan
   - <https://raspberrypi.stackexchange.com/a/145670>
