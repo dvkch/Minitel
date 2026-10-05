@@ -33,8 +33,8 @@ A WS2812 LED shows the keyboard state:
 | Color          | Meaning |
 |----------------|----------|
 | Red            | Waiting for a computer: none has connected since the keyboard was powered on |
-| Pulsing red    | The computer was there, then went away: unplugged, rebooting, or its USB port powered down |
-| Pulsing yellow | The computer is plugged in but not listening (asleep, shut down, or still in its boot menu), or after the given idling timeout. |
+| Pulsing red    | The computer was there, but isn't listening anymore: shut down, rebooting, still in its boot menu, or unplugged |
+| Pulsing yellow | No key pressed for a while (15 minutes by default, see the `idle` command), back to normal at the next key press |
 | Green          | Ready to type, NumLock on |
 | Yellow         | Ready to type, NumLock off |
 | Blue           | Fnct + Connexion held: the power key goes to the computer, or wakes it up if it is shut down |

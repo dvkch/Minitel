@@ -162,10 +162,11 @@ static void updateLed() {
     if (isPowerHeld) {
         led.show(BLUE);
     }
-    else if (!usb.isConnected()) {
+    else if (!usb.isConnected() || usb.isSuspended()) {
+        // a halted Pi keeps powering its USB ports and only stops talking, seen here as suspended
         led.show(RED, hasBeenConnected);
     }
-    else if (usb.isSuspended() || isIdle()) {
+    else if (isIdle()) {
         led.show(YELLOW, true);
     }
     else if (usb.isNumLockOn()) {
