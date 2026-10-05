@@ -1,4 +1,5 @@
 #include <Arduino.h>
+#include <Preferences.h>
 #include "Console.h"
 #include "KeyLog.h"
 #include "Keymap.h"
@@ -25,6 +26,14 @@ static constexpr uint32_t WAKE_PULSE_MS = 200;
 static uint32_t wakeStartedAt = 0;
 static bool isWaking = false;
 static bool isPowerHeld = false;
+
+// no key pressed for this long and the LED pulses as if the computer was asleep, 0 disables it, saved across reboots
+static constexpr uint32_t DEFAULT_IDLE_SECONDS = 15 * 60;
+static Preferences preferences;
+static uint32_t idleSeconds = DEFAULT_IDLE_SECONDS;
+static uint32_t lastActivityAt = 0;
+static bool wasListening = false;
+static bool hasBeenConnected = false;
 
 static LogMode logMode = LogMode::Off;
 static uint8_t pressedCount = 0;
@@ -53,9 +62,32 @@ static void setLogMode(Print &out, const String &args) {
     out.printf("Logging %s\n", args.c_str());
 }
 
+static void setIdleDelay(Print &out, const String &args) {
+    if (!args.isEmpty()) {
+        bool isNumber = args.length() <= 9;
+        for (size_t i = 0; i < args.length(); i++) {
+            isNumber &= isDigit(args[i]);
+        }
+        if (!isNumber) {
+            out.printf("Invalid delay '%s', use: idle <seconds>, 0 to disable\n", args.c_str());
+            return;
+        }
+        idleSeconds = args.toInt();
+        preferences.putUInt("idleSeconds", idleSeconds);
+    }
+
+    if (idleSeconds == 0) {
+        out.println("Idle pulsing disabled");
+    }
+    else {
+        out.printf("Pulsing after %lu s without key presses\n", (unsigned long)idleSeconds);
+    }
+}
+
 static const ConsoleCommand commands[] = {
-    { "version", "show the firmware version",                                       printVersion },
-    { "log",     "print key presses: log coords, log names, log matrix, log off",   setLogMode },
+    { "version", "show the firmware version",                                         printVersion },
+    { "log",     "print key presses: log coords, log names, log matrix, log off",     setLogMode },
+    { "idle",    "pulse the LED when idle: idle, idle <seconds>, idle 0 to disable",  setIdleDelay },
 };
 static Console console(usb.serial, commands, sizeof(commands) / sizeof(commands[0]));
 
@@ -84,6 +116,7 @@ static void onPowerKey(bool pressed) {
 
 static void onKey(uint8_t row, uint8_t col, bool pressed) {
     KeyVariant variant = keyboardState.onKey(row, col, pressed);
+    lastActivityAt = millis();
     if (KEYMAP[row][col].action(variant).system == SYSTEM_POWER) {
         onPowerKey(pressed);
     }
@@ -111,14 +144,28 @@ static void onKey(uint8_t row, uint8_t col, bool pressed) {
     }
 }
 
+// the computer starting or waking up counts as activity, so the LED doesn't pulse right away
+static void updateActivity() {
+    hasBeenConnected |= usb.isConnected();
+    bool isListening = usb.isConnected() && !usb.isSuspended();
+    if (isListening != wasListening) {
+        wasListening = isListening;
+        lastActivityAt = millis();
+    }
+}
+
+static bool isIdle() {
+    return idleSeconds > 0 && millis() - lastActivityAt >= idleSeconds * 1000ULL;
+}
+
 static void updateLed() {
     if (isPowerHeld) {
         led.show(BLUE);
     }
     else if (!usb.isConnected()) {
-        led.show(RED);
+        led.show(RED, hasBeenConnected);
     }
-    else if (usb.isSuspended()) {
+    else if (usb.isSuspended() || isIdle()) {
         led.show(YELLOW, true);
     }
     else if (usb.isNumLockOn()) {
@@ -131,6 +178,8 @@ static void updateLed() {
 
 void setup() {
     pinMode(PI_WAKE_PIN, INPUT);
+    preferences.begin("keyboard32");
+    idleSeconds = preferences.getUInt("idleSeconds", DEFAULT_IDLE_SECONDS);
     usb.begin();
     matrix.begin();
 }
@@ -142,6 +191,7 @@ void loop() {
     }
     keyboardState.flush(usb);
     updateWake();
+    updateActivity();
     updateLed();
     console.poll();
     delay(1);

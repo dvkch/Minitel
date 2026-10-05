@@ -30,13 +30,14 @@ Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rect
 
 A WS2812 LED shows the keyboard state:
 
-| Color          | State                                                  |
-|----------------|--------------------------------------------------------|
-| Red            | No computer connected: off or booting                  |
-| Pulsing yellow | Computer present but not running: boot menu loading, or shut down |
-| Green          | Computer running, NumLock on                           |
-| Yellow         | Computer running, NumLock off                          |
-| Blue           | Power keys held (Fnct + Connexion)                     |
+| Color          | Meaning |
+|----------------|----------|
+| Red            | Waiting for a computer: none has connected since the keyboard was powered on |
+| Pulsing red    | The computer was there, then went away: unplugged, rebooting, or its USB port powered down |
+| Pulsing yellow | The computer is plugged in but not listening (asleep, shut down, or still in its boot menu), or after the given idling timeout. |
+| Green          | Ready to type, NumLock on |
+| Yellow         | Ready to type, NumLock off |
+| Blue           | Fnct + Connexion held: the power key goes to the computer, or wakes it up if it is shut down |
 
 Wiring: data to GPIO 14 through a ~330 Ω resistor, power to 5V and GND. These are the last three pins of the left header. The `IN-OUT` jumper must be closed (solder bridge), otherwise 5V gets almost no power from USB.
 
@@ -197,6 +198,7 @@ Open the console using `make monitor`, then type a command followed by `Enter`:
 - `log names`: print each key press and release with its possible usages, the one sent highlighted
 - `log matrix`: print the state of the 81 matrix positions at each change, `#` for pressed keys, `?` for keys read as pressed but ignored as ghosts, `.` for released keys
 - `log off`: stop printing key presses
+- `idle`: show the delay without key presses before the LED pulses, `idle 600` sets it in seconds, `idle 0` disables it. Saved across reboots, 15 minutes by default
 
 `log coords` and `log names` print `-----` once all keys are released. Example of `log names`, for Shift + Sommaire, the highlighted usages being `Shift`, then `Shift: ^`:
 
