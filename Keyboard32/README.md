@@ -24,7 +24,7 @@ Connect the keyboard ribbon cable to these ESP32 GPIOs (labels as printed on the
 
 Rows (X) are on the left header, contiguous from the 4th pin. Columns (Y) are on the right header, from the 4th to the 10th pin, then the 17th and 18th. The pins in between can't be used: GPIO 35 to 37 are connected to the PSRAM inside the module, GPIO 0 and 45 select the boot mode, GPIO 48 drives the onboard RGB LED. No key has been found on X8 so far, it is wired anyway.
 
-Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. New key presses in such a configuration are ignored.
+Nota: the keyboard matrix has no diodes: holding 3 keys at the corners of a rectangle (e.g. W, B, D) makes the 4th one (G) look pressed. New key presses in such a configuration are ignored. For example, Left Shift and Alt are on the same row, so Ctrl + Shift + Alt can't be held together.
 
 ### Status LED
 
@@ -87,7 +87,6 @@ Rules:
 - Keys type what is printed on them.
 - Shift types the upper symbol.
 - Keypad digits need NumLock on.
-- Fnct + a key without Fnct action acts as Alt.
 - Compose types any other character.
 
 Function keys, with the symbol typed with Shift:
@@ -111,6 +110,7 @@ Other keys:
 | `*` (keypad)  | NumLock       | `[`        |
 | `#` (keypad)  | Compose       | `]`        |
 | Espace        | Space         | Tab        |
+| Shift (right) | Alt           |            |
 
 Fnct layer:
 
@@ -118,6 +118,7 @@ Fnct layer:
 |---------------|---------------|
 | 1 to 9        | F1 to F9      |
 | E             | €             |
+| `-`           | `~`           |
 | Retour        | Volume down   |
 | Suite         | Volume up     |
 | Connexion     | Power: shut down the Pi, or start it once halted |
@@ -156,10 +157,12 @@ Labels to add to the keys. Blue: with Fnct. Yellow: with Shift. Keep the printed
 | `*` (keypad)  | Verr Num      |                   |
 | `#` (keypad)  | ⎄ (Compose)   |                   |
 | Fnct          |               | Fn, blue          |
-| Shift (both)  |               | mark, yellow      |
+| Shift (left)  |               | mark, yellow      |
+| Shift (right) | Alt           |                   |
 | Espace        |               | Tab, yellow       |
 | Keypad 1 to 9 |               | F, blue           |
 | E             |               | €, blue           |
+| `-`           |               | ~, blue           |
 | Retour        |               | Vol −, blue       |
 | Suite         |               | Vol +, blue       |
 
@@ -215,4 +218,4 @@ The logs use ANSI colors. Don't add the `default` filter to `monitor_filters`, i
 
 Any serial terminal works as a console, e.g. `screen /dev/ttyACM0` (exit with `Ctrl+A`, `K`, `Y`): the baud rate is ignored, except 1200 which reboots the ESP32 into its bootloader. The console doesn't echo what is typed, terminals need local echo to show it, and ends its lines with a bare LF, terminals may need to add the CR (`tio --map INLCRNL`).
 
-A `-` usage means the normal one is sent instead, with Shift or Fnct still held.
+A `-` usage means the normal one is sent instead: with Shift still held, or ignoring Fnct.

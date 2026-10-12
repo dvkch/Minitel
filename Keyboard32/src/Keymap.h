@@ -3,10 +3,6 @@
 #include "KeyDef.h"
 #include "Matrix.h"
 
-// position of the Fnct key, selecting the `fn` actions while held
-constexpr uint8_t FN_ROW = 6;
-constexpr uint8_t FN_COL = 0;
-
 // HID usages are positional and named after the US layout: the host must use the French AZERTY layout.
 // Ctrl + I, H, J and X, printed in red as Tab, BS, LF and Can, need no mapping: terminals turn them into these control codes
 constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
@@ -16,7 +12,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { "W",          K(HID_KEY_Z),                               NONE,                                   NONE },
         { "B",          K(HID_KEY_B),                               NONE,                                   NONE },
         { "N",          K(HID_KEY_N),                               NONE,                                   NONE },
-        { "Shift",      MOD(RSHIFT, "Shift"),                       NONE,                                   NONE },
+        { "Shift",      MOD(LALT, "Alt"),                           NONE,                                   NONE },
         { "V",          K(HID_KEY_V),                               NONE,                                   NONE },
         { "C",          K(HID_KEY_C),                               NONE,                                   NONE },
         { "X",          K(HID_KEY_X),                               NONE,                                   NONE },
@@ -61,7 +57,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         { ".",          K(HID_KEY_COMMA, LSHIFT, "."),              K(HID_KEY_EUROPE_2, LSHIFT, ">"),       NONE },
         { "'",          K(HID_KEY_4, "'"),                          K(HID_KEY_0, RALT, "@"),                NONE },
         { ";",          K(HID_KEY_COMMA, ";"),                      K(HID_KEY_EQUAL, LSHIFT, "+"),          NONE },
-        { "-",          K(HID_KEY_6, "-"),                          K(HID_KEY_EQUAL, "="),                  NONE },
+        { "-",          K(HID_KEY_6, "-"),                          K(HID_KEY_EQUAL, "="),                  K(HID_KEY_2, RALT, "~") },
         { ":",          K(HID_KEY_PERIOD, ":"),                     K(HID_KEY_BACKSLASH, "*"),              NONE },
         { "?",          K(HID_KEY_M, LSHIFT, "?"),                  K(HID_KEY_PERIOD, LSHIFT, "/"),         NONE },
         {},
@@ -78,7 +74,7 @@ constexpr KeyDef KEYMAP[MATRIX_ROWS][MATRIX_COLS] = {
         {},
     },
     { // X6
-        { "Fnct",       MOD(LALT, "Fn/Alt"),                        NONE,                                   NONE },
+        { "Fnct",       FN("Fn"),                                   NONE,                                   NONE },
         { "Sommaire",   K(HID_KEY_HOME, "Home"),                    K(HID_KEY_BRACKET_LEFT, "^"),           NONE },
         { "Annulation", K(HID_KEY_DELETE, "Delete"),                K(HID_KEY_8, RALT, "\\"),               NONE },
         { "Retour",     CC(HID_USAGE_CONSUMER_AC_BACK, "Back"),     K(HID_KEY_M, RALT, "´"),                CC(HID_USAGE_CONSUMER_VOLUME_DECREMENT, "Vol-") }, // dead acute

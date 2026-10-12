@@ -11,7 +11,6 @@ constexpr uint8_t RCTRL  = KEYBOARD_MODIFIER_RIGHTCTRL;
 constexpr uint8_t RSHIFT = KEYBOARD_MODIFIER_RIGHTSHIFT;
 constexpr uint8_t RALT   = KEYBOARD_MODIFIER_RIGHTALT;
 constexpr uint8_t RGUI   = KEYBOARD_MODIFIER_RIGHTGUI;
-constexpr uint8_t SHIFTS = LSHIFT | RSHIFT;
 
 // value of the Arduino core's system control report sent as HID "System Power Down", i.e. the power key
 constexpr uint8_t SYSTEM_POWER = 1;
@@ -21,9 +20,10 @@ struct KeyAction {
     uint8_t key;        // HID keyboard page usage
     uint16_t consumer;  // HID consumer page usage
     uint8_t system;     // Arduino core system control value
+    bool fn;            // Fnct, selecting the `fn` actions of the other keys while held
     const char *label;  // shown in the logs, the key name when null
 
-    constexpr bool isEmpty() const { return !mods && !key && !consumer && !system; }
+    constexpr bool isEmpty() const { return !mods && !key && !consumer && !system && !fn; }
     constexpr bool isModifier() const { return mods && !key && !consumer && !system; }
 };
 
@@ -34,7 +34,7 @@ struct KeyDef {
     const char *name;   // label printed on the Minitel key
     KeyAction normal;
     KeyAction shifted;  // empty: the normal action is sent, with Shift still held
-    KeyAction fn;       // empty: the normal action is sent, with Fnct acting as Alt
+    KeyAction fn;       // empty: the normal action is sent, Fnct being ignored
 
     constexpr const KeyAction &action(KeyVariant variant) const {
         return variant == KeyVariant::Shifted ? shifted : variant == KeyVariant::Fn ? fn : normal;
@@ -46,7 +46,7 @@ constexpr KeyAction NONE = {};
 // consteval + throw turns an out of range value into a build error
 consteval KeyAction K(int key, int mods, const char *label = nullptr) {
     if (key <= 0 || key > 0xDD || mods < 0 || mods > 0xFF) throw "invalid HID key";
-    return { uint8_t(mods), uint8_t(key), 0, 0, label };
+    return { uint8_t(mods), uint8_t(key), 0, 0, false, label };
 }
 
 consteval KeyAction K(int key, const char *label = nullptr) {
@@ -55,15 +55,19 @@ consteval KeyAction K(int key, const char *label = nullptr) {
 
 consteval KeyAction MOD(int mods, const char *label = nullptr) {
     if (mods <= 0 || mods > 0xFF) throw "invalid HID modifiers";
-    return { uint8_t(mods), 0, 0, 0, label };
+    return { uint8_t(mods), 0, 0, 0, false, label };
 }
 
 consteval KeyAction CC(int usage, const char *label = nullptr) {
     if (usage <= 0 || usage > 0x0FFF) throw "invalid HID consumer usage";
-    return { 0, 0, uint16_t(usage), 0, label };
+    return { 0, 0, uint16_t(usage), 0, false, label };
 }
 
 consteval KeyAction SYS(int value, const char *label = nullptr) {
     if (value <= 0 || value > 3) throw "invalid system control value";
-    return { 0, 0, 0, uint8_t(value), label };
+    return { 0, 0, 0, uint8_t(value), false, label };
+}
+
+consteval KeyAction FN(const char *label = nullptr) {
+    return { 0, 0, 0, 0, true, label };
 }
