@@ -30,6 +30,14 @@ flash: build
 monitor: $(PIO)
 	$(PIO) device monitor $(PORT_ARG)
 
+# the same console without PlatformIO, through tio (crashes aren't decoded): useful once the dependencies are removed
+# the firmware ends lines with a bare LF, which tio shows as is: INLCRNL adds the CR terminals need
+CONSOLE_PORT = $(or $(PORT),$(firstword $(wildcard /dev/serial/by-id/*Minitel* /dev/cu.usbmodem*)))
+console:
+	@command -v tio >/dev/null || { echo "tio is needed: sudo apt install tio (macOS: brew install tio)"; exit 1; }
+	@test -n "$(CONSOLE_PORT)" || { echo "keyboard not found, set PORT, e.g. make console PORT=/dev/ttyACM0"; exit 1; }
+	tio --local-echo --map INLCRNL $(CONSOLE_PORT)
+
 erase: build
 	$(PIO) run -t erase $(UPLOAD_PORT_ARG)
 
@@ -49,4 +57,4 @@ clean:
 clean-deps: clean
 	rm -rf $(VENV) .platformio
 
-.PHONY: all deps build flash monitor erase prune clean clean-deps
+.PHONY: all deps build flash monitor console erase prune clean clean-deps

@@ -171,6 +171,7 @@ Everything PlatformIO needs is installed inside this folder (`.venv` and `.platf
 - `make`: build the firmware, installing the dependencies on first run
 - `make flash`: build and flash the firmware
 - `make monitor`: open the serial console, exit with `Ctrl+C`
+- `make console`: open the serial console without PlatformIO, using [tio](https://github.com/tio/tio) (`sudo apt install tio`), exit with `Ctrl+T` then `Q`. Crashes aren't decoded
 - `make erase`: wipe the whole ESP32 flash (if it cannot connect, use the buttons as for the first flash)
 - `make clean`: remove build files
 - `make prune`: remove PlatformIO's download caches and the files not needed for an ESP32-S3 (done automatically after each build)
@@ -190,7 +191,7 @@ Then reset the board using `RST` once flashed. Next flashes don't need any butto
 
 ### Debug
 
-Open the console using `make monitor`, then type a command followed by `Enter`:
+Open the console using `make monitor` or `make console`, then type a command followed by `Enter`:
 
 - `help`: list the available commands
 - `version`: show the firmware version
@@ -211,5 +212,7 @@ UP    Shift:       [Shift]        Shift: -      Fnct: -
 ```
 
 The logs use ANSI colors. Don't add the `default` filter to `monitor_filters`, it strips them and leaves stray characters.
+
+Any serial terminal works as a console, e.g. `screen /dev/ttyACM0` (exit with `Ctrl+A`, `K`, `Y`): the baud rate is ignored, except 1200 which reboots the ESP32 into its bootloader. The console doesn't echo what is typed, terminals need local echo to show it, and ends its lines with a bare LF, terminals may need to add the CR (`tio --map INLCRNL`).
 
 A `-` usage means the normal one is sent instead, with Shift or Fnct still held.
