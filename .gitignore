@@ -2,7 +2,7 @@
 .DS_Store
 
 # Builds
-KeyboardC/minitel-keyboard-c
-Keyboard32/.venv
-Keyboard32/.platformio
-Keyboard32/.pio
+Keyboard/KeyboardC/minitel-keyboard-c
+Keyboard/Keyboard32/.venv
+Keyboard/Keyboard32/.platformio
+Keyboard/Keyboard32/.pio
