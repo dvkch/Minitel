@@ -9,6 +9,8 @@ This folder contains multiple versions of a Minitel keyboard driver:
 
 All use almost identical layouts and behaviour, their own READMEs detail notable differences. All were tested on a RPi4 with 2GB RAM on Raspberry Pi OS Trixie.
 
+![Minitel 1B Keyboard](keyboard.jpg)
+
 ### Keyboard layout
 
 The keyboard layout is French only, here are the best settings to use with all drivers.
