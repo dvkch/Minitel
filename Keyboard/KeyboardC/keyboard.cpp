@@ -23,108 +23,110 @@ typedef struct {
     const char *name;
     std::vector<int> codes;
     std::vector<int> shift_codes;
+    std::vector<int> fn_codes;
     bool is_shift;
+    bool is_fn;
 } Key;
 
 Key keyboard[ROWS * COLS] = {
     // Row 0
-    { "x0y0", "Left Shift",     {KEY_LEFTSHIFT},            {},                                 true },
-    { "x0y1", "W",              {KEY_Z},                    {},                                 false },
-    { "x0y2", "B",              {KEY_B},                    {},                                 false },
-    { "x0y3", "N",              {KEY_N},                    {},                                 false },
-    { "x0y4", "Right Shift",    {KEY_RIGHTSHIFT},           {},                                 true },
-    { "x0y5", "V",              {KEY_V},                    {},                                 false },
-    { "x0y6", "C",              {KEY_C},                    {},                                 false },
-    { "x0y7", "X",              {KEY_X},                    {},                                 false },
-    { "x0y8", "<x0y8>",         {},                         {},                                 false },
+    { "x0y0", "Shift",          {KEY_LEFTSHIFT},            {},                                 {},                         true,  false },
+    { "x0y1", "W",              {KEY_Z},                    {},                                 {},                         false, false },
+    { "x0y2", "B",              {KEY_B},                    {},                                 {},                         false, false },
+    { "x0y3", "N",              {KEY_N},                    {},                                 {},                         false, false },
+    { "x0y4", "Alt",            {KEY_LEFTALT},              {},                                 {},                         false, false }, // used as Alt
+    { "x0y5", "V",              {KEY_V},                    {},                                 {},                         false, false },
+    { "x0y6", "C",              {KEY_C},                    {},                                 {},                         false, false },
+    { "x0y7", "X",              {KEY_X},                    {},                                 {},                         false, false },
+    { "x0y8", "<x0y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 1
-    { "x1y0", "Q",              {KEY_A},                    {},                                 false },
-    { "x1y1", "D",              {KEY_D},                    {},                                 false },
-    { "x1y2", "G",              {KEY_G},                    {},                                 false },
-    { "x1y3", "J",              {KEY_J},                    {},                                 false },
-    { "x1y4", "L",              {KEY_L},                    {},                                 false },
-    { "x1y5", "1/`",            {KEY_KP1},                  {KEY_RIGHTALT, KEY_7},              false },
-    { "x1y6", "2/(",            {KEY_KP2},                  {KEY_5},                            false },
-    { "x1y7", "3/)",            {KEY_KP3},                  {KEY_MINUS},                        false },
-    { "x1y8", "<x1y8>",         {},                         {},                                 false },
+    { "x1y0", "Q",              {KEY_A},                    {},                                 {},                         false, false },
+    { "x1y1", "D",              {KEY_D},                    {},                                 {},                         false, false },
+    { "x1y2", "G",              {KEY_G},                    {},                                 {},                         false, false },
+    { "x1y3", "J",              {KEY_J},                    {},                                 {},                         false, false },
+    { "x1y4", "L",              {KEY_L},                    {},                                 {},                         false, false },
+    { "x1y5", "1",              {KEY_KP1},                  {KEY_RIGHTALT, KEY_7},              {KEY_F1},                   false, false },
+    { "x1y6", "2",              {KEY_KP2},                  {KEY_5},                            {KEY_F2},                   false, false },
+    { "x1y7", "3",              {KEY_KP3},                  {KEY_MINUS},                        {KEY_F3},                   false, false },
+    { "x1y8", "<x1y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 2
-    { "x2y0", "Control",        {KEY_LEFTCTRL},             {},                                 false },
-    { "x2y1", "S",              {KEY_S},                    {},                                 false },
-    { "x2y2", "F",              {KEY_F},                    {},                                 false },
-    { "x2y3", "H",              {KEY_H},                    {},                                 false },
-    { "x2y4", "K",              {KEY_K},                    {},                                 false },
-    { "x2y5", "M",              {KEY_SEMICOLON},            {},                                 false },
-    { "x2y6", "P",              {KEY_P},                    {},                                 false },
-    { "x2y7", "O",              {KEY_O},                    {},                                 false },
-    { "x2y8", "<x2y8>",         {},                         {},                                 false },
+    { "x2y0", "Ctrl",           {KEY_LEFTCTRL},             {},                                 {},                         false, false },
+    { "x2y1", "S",              {KEY_S},                    {},                                 {},                         false, false },
+    { "x2y2", "F",              {KEY_F},                    {},                                 {},                         false, false },
+    { "x2y3", "H",              {KEY_H},                    {},                                 {},                         false, false },
+    { "x2y4", "K",              {KEY_K},                    {},                                 {},                         false, false },
+    { "x2y5", "M",              {KEY_SEMICOLON},            {},                                 {},                         false, false },
+    { "x2y6", "P",              {KEY_P},                    {},                                 {},                         false, false },
+    { "x2y7", "O",              {KEY_O},                    {},                                 {},                         false, false },
+    { "x2y8", "<x2y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 3
-    { "x3y0", "A",              {KEY_Q},                    {},                                 false },
-    { "x3y1", "Z",              {KEY_W},                    {},                                 false },
-    { "x3y2", "E",              {KEY_E},                    {},                                 false },
-    { "x3y3", "R",              {KEY_R},                    {},                                 false },
-    { "x3y4", "T",              {KEY_T},                    {},                                 false },
-    { "x3y5", "Y",              {KEY_Y},                    {},                                 false },
-    { "x3y6", "U",              {KEY_U},                    {},                                 false },
-    { "x3y7", "I",              {KEY_I},                    {},                                 false },
-    { "x3y8", "<x3y8>",         {},                         {},                                 false },
+    { "x3y0", "A",              {KEY_Q},                    {},                                 {},                         false, false },
+    { "x3y1", "Z",              {KEY_W},                    {},                                 {},                         false, false },
+    { "x3y2", "E",              {KEY_E},                    {},                                 {KEY_RIGHTALT, KEY_E},      false, false },
+    { "x3y3", "R",              {KEY_R},                    {},                                 {},                         false, false },
+    { "x3y4", "T",              {KEY_T},                    {},                                 {},                         false, false },
+    { "x3y5", "Y",              {KEY_Y},                    {},                                 {},                         false, false },
+    { "x3y6", "U",              {KEY_U},                    {},                                 {},                         false, false },
+    { "x3y7", "I",              {KEY_I},                    {},                                 {},                         false, false },
+    { "x3y8", "<x3y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 4
-    { "x4y0", "Escape",         {KEY_ESC},                  {},                                 false },
-    { "x4y1", ",/<",            {KEY_M},                    {KEY_102ND},                        false },
-    { "x4y2", "./>",            {KEY_LEFTSHIFT, KEY_COMMA}, {KEY_LEFTSHIFT, KEY_102ND},         false },
-    { "x4y3", "'/@",            {KEY_4},                    {KEY_RIGHTALT, KEY_0},              false },
-    { "x4y4", ";/+",            {KEY_COMMA},                {KEY_LEFTSHIFT, KEY_EQUAL},         false },
-    { "x4y5", "-/=",            {KEY_6},                    {KEY_EQUAL},                        false },
-    { "x4y6", ":/*",            {KEY_DOT},                  {KEY_BACKSLASH},                    false },
-    { "x4y7", "?//",            {KEY_LEFTSHIFT, KEY_M},     {KEY_LEFTSHIFT, KEY_DOT},           false },
-    { "x4y8", "<x4y8>",         {},                         {},                                 false },
+    { "x4y0", "Esc",            {KEY_ESC},                  {},                                 {},                         false, false },
+    { "x4y1", ",",              {KEY_M},                    {KEY_102ND},                        {},                         false, false },
+    { "x4y2", ".",              {KEY_LEFTSHIFT, KEY_COMMA}, {KEY_LEFTSHIFT, KEY_102ND},         {},                         false, false },
+    { "x4y3", "'",              {KEY_4},                    {KEY_RIGHTALT, KEY_0},              {},                         false, false },
+    { "x4y4", ";",              {KEY_COMMA},                {KEY_LEFTSHIFT, KEY_EQUAL},         {},                         false, false },
+    { "x4y5", "-",              {KEY_6},                    {KEY_EQUAL},                        {KEY_RIGHTALT, KEY_2},      false, false },
+    { "x4y6", ":",              {KEY_DOT},                  {KEY_BACKSLASH},                    {},                         false, false },
+    { "x4y7", "?",              {KEY_LEFTSHIFT, KEY_M},     {KEY_LEFTSHIFT, KEY_DOT},           {},                         false, false },
+    { "x4y8", "<x4y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 5
-    { "x5y0", "Connexion",      {KEY_F1},                   {},                                 false },
-    { "x5y1", "Guide/¨",        {KEY_F3},                   {KEY_LEFTSHIFT, KEY_LEFTBRACE},     false },
-    { "x5y2", "Correction/§",   {KEY_BACKSPACE},            {KEY_LEFTSHIFT, KEY_SLASH},         false },
-    { "x5y3", "Suite",          {KEY_FORWARD},              {},                                 false },
-    { "x5y4", "Envoi/}",        {KEY_LEFTMETA},             {KEY_RIGHTALT, KEY_EQUAL},          false },
-    { "x5y5", "4/$",            {KEY_KP4},                  {KEY_RIGHTBRACE},                   false },
-    { "x5y6", "5/%",            {KEY_KP5},                  {KEY_LEFTSHIFT, KEY_APOSTROPHE},    false },
-    { "x5y7", "6/&",            {KEY_KP6},                  {KEY_1},                            false },
-    { "x5y8", "<x5y8>",         {},                         {},                                 false },
+    { "x5y0", "Connexion",      {KEY_LEFTMETA},             {},                                 {KEY_POWER},                false, false }, // Power: shuts the Pi down, can't start it
+    { "x5y1", "Guide",          {KEY_END},                  {KEY_LEFTSHIFT, KEY_LEFTBRACE},     {},                         false, false },
+    { "x5y2", "Correction",     {KEY_BACKSPACE},            {KEY_LEFTSHIFT, KEY_SLASH},         {},                         false, false },
+    { "x5y3", "Suite",          {KEY_FORWARD},              {KEY_RIGHTALT, KEY_BACKSLASH},      {KEY_VOLUMEUP},             false, false }, // dead grave
+    { "x5y4", "Envoi",          {KEY_PAGEDOWN},             {KEY_RIGHTALT, KEY_EQUAL},          {},                         false, false },
+    { "x5y5", "4",              {KEY_KP4},                  {KEY_RIGHTBRACE},                   {KEY_F4},                   false, false },
+    { "x5y6", "5",              {KEY_KP5},                  {KEY_LEFTSHIFT, KEY_APOSTROPHE},    {KEY_F5},                   false, false },
+    { "x5y7", "6",              {KEY_KP6},                  {KEY_1},                            {KEY_F6},                   false, false },
+    { "x5y8", "<x5y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 6
-    { "x6y0", "Fonction",       {KEY_LEFTALT},              {},                                 false },
-    { "x6y1", "Sommaire/^",     {KEY_F2},                   {KEY_LEFTBRACE},                    false },
-    { "x6y2", "Annulation/\\",  {KEY_F4},                   {KEY_RIGHTALT, KEY_8},              false },
-    { "x6y3", "Retour",         {KEY_BACK},                 {},                                 false },
-    { "x6y4", "Répétition/{",   {KEY_F5},                   {KEY_RIGHTALT, KEY_4},              false },
-    { "x6y5", "7/!",            {KEY_KP7},                  {KEY_SLASH},                        false },
-    { "x6y6", "8/\"",           {KEY_KP8},                  {KEY_3},                            false },
-    { "x6y7", "9/#",            {KEY_KP9},                  {KEY_RIGHTALT, KEY_3},              false },
-    { "x6y8", "<x6y8>",         {},                         {},                                 false },
+    { "x6y0", "Fnct",           {},                         {},                                 {},                         false, true  },
+    { "x6y1", "Sommaire",       {KEY_HOME},                 {KEY_LEFTBRACE},                    {},                         false, false },
+    { "x6y2", "Annulation",     {KEY_DELETE},               {KEY_RIGHTALT, KEY_8},              {},                         false, false },
+    { "x6y3", "Retour",         {KEY_BACK},                 {KEY_RIGHTALT, KEY_M},              {KEY_VOLUMEDOWN},           false, false }, // dead acute
+    { "x6y4", "Répétition",     {KEY_PAGEUP},               {KEY_RIGHTALT, KEY_4},              {},                         false, false },
+    { "x6y5", "7",              {KEY_KP7},                  {KEY_SLASH},                        {KEY_F7},                   false, false },
+    { "x6y6", "8",              {KEY_KP8},                  {KEY_3},                            {KEY_F8},                   false, false },
+    { "x6y7", "9",              {KEY_KP9},                  {KEY_RIGHTALT, KEY_3},              {KEY_F9},                   false, false },
+    { "x6y8", "<x6y8>",         {},                         {},                                 {},                         false, false },
 
     // Row 7
-    { "x7y0", "Up",             {KEY_UP},                   {},                                 false },
-    { "x7y1", "Down",           {KEY_DOWN},                 {},                                 false },
-    { "x7y2", "Left",           {KEY_LEFT},                 {},                                 false },
-    { "x7y3", "Right",          {KEY_RIGHT},                {},                                 false },
-    { "x7y4", "Return",         {KEY_ENTER},                {},                                 false },
-    { "x7y5", "NumLock/[",      {KEY_NUMLOCK},              {KEY_RIGHTALT, KEY_5},              false },
-    { "x7y6", "0/|",            {KEY_KP0},                  {KEY_RIGHTALT, KEY_6},              false },
-    { "x7y7", "Compose/]",      {KEY_RIGHTCTRL},            {KEY_RIGHTALT, KEY_MINUS},          false },
-    { "x7y8", "Space/Tab",      {KEY_SPACE},                {KEY_TAB},                          false },
+    { "x7y0", "↑",              {KEY_UP},                   {},                                 {},                         false, false },
+    { "x7y1", "↓",              {KEY_DOWN},                 {},                                 {},                         false, false },
+    { "x7y2", "←",              {KEY_LEFT},                 {},                                 {},                         false, false },
+    { "x7y3", "→",              {KEY_RIGHT},                {},                                 {},                         false, false },
+    { "x7y4", "Return",         {KEY_ENTER},                {},                                 {},                         false, false },
+    { "x7y5", "*",              {KEY_NUMLOCK},              {KEY_RIGHTALT, KEY_5},              {},                         false, false },
+    { "x7y6", "0",              {KEY_KP0},                  {KEY_RIGHTALT, KEY_6},              {},                         false, false },
+    { "x7y7", "#",              {KEY_RIGHTCTRL},            {KEY_RIGHTALT, KEY_MINUS},          {},                         false, false }, // Compose key with the host's compose:rctrl option
+    { "x7y8", "Espace",         {KEY_SPACE},                {KEY_TAB},                          {},                         false, false },
 
     // Row 8
-    { "x8y0", "<x8y0>",         {},                         {},                                 false },
-    { "x8y1", "<x8y1>",         {},                         {},                                 false },
-    { "x8y2", "<x8y2>",         {},                         {},                                 false },
-    { "x8y3", "<x8y3>",         {},                         {},                                 false },
-    { "x8y4", "<x8y4>",         {},                         {},                                 false },
-    { "x8y5", "<x8y5>",         {},                         {},                                 false },
-    { "x8y6", "<x8y6>",         {},                         {},                                 false },
-    { "x8y7", "<x8y7>",         {},                         {},                                 false },
-    { "x8y8", "<x8y8>",         {},                         {},                                 false },
+    { "x8y0", "<x8y0>",         {},                         {},                                 {},                         false, false },
+    { "x8y1", "<x8y1>",         {},                         {},                                 {},                         false, false },
+    { "x8y2", "<x8y2>",         {},                         {},                                 {},                         false, false },
+    { "x8y3", "<x8y3>",         {},                         {},                                 {},                         false, false },
+    { "x8y4", "<x8y4>",         {},                         {},                                 {},                         false, false },
+    { "x8y5", "<x8y5>",         {},                         {},                                 {},                         false, false },
+    { "x8y6", "<x8y6>",         {},                         {},                                 {},                         false, false },
+    { "x8y7", "<x8y7>",         {},                         {},                                 {},                         false, false },
+    { "x8y8", "<x8y8>",         {},                         {},                                 {},                         false, false },
 };
 
 class Input {
@@ -184,6 +186,9 @@ class Input {
                     for (int key : keyboard[k].shift_codes) {
                         ioctl(fd, UI_SET_KEYBIT, key);
                     }
+                    for (int key : keyboard[k].fn_codes) {
+                        ioctl(fd, UI_SET_KEYBIT, key);
+                    }
                 }
 
                 memset(&uidev, 0, sizeof(uidev));
@@ -218,6 +223,7 @@ class Keyboard {
             this->printCoords = printCoords;
             this->printNames = printNames;
             this->input = input;
+            this->fn_held = false;
         }
 
         void run() {
@@ -266,6 +272,9 @@ class Keyboard {
                                     this->shifts.insert(code);
                                 }
                             }
+                            if (keyboard[keycode].is_fn) {
+                                this->fn_held = true;
+                            }
 
                             if (this->printCoords) {
                                 printf("%s down\n", keyboard[keycode].id);
@@ -284,6 +293,9 @@ class Keyboard {
                                 for (int code : keyboard[keycode].codes) {
                                     this->shifts.erase(code);
                                 }
+                            }
+                            if (keyboard[keycode].is_fn) {
+                                this->fn_held = false;
                             }
 
                             if (this->printCoords) {
@@ -313,6 +325,8 @@ class Keyboard {
         std::set<int> pressed;
         std::set<int> shifts;
         std::set<int> shifted_keys;
+        bool fn_held;
+        std::set<int> fn_keys;
 
         // Without diodes, 3 keys held at the corners of a rectangle make the 4th one look pressed. This happens
         // when two rows share at least two columns: a new press in such a configuration is ignored.
@@ -328,16 +342,22 @@ class Keyboard {
         void sendKey(int keycode, bool pressed) {
             const Key& key_config = keyboard[keycode];
 
-            // the variant is chosen on press and reused on release, even if Shift changed meanwhile
-            if (pressed && !shifts.empty() && !key_config.shift_codes.empty()) {
+            // the variant is chosen on press and reused on release, even if Shift or Fnct changed meanwhile.
+            // Fnct wins over Shift, and a key without Fnct variant is sent as if Fnct wasn't held
+            if (pressed && fn_held && !key_config.fn_codes.empty()) {
+                fn_keys.insert(keycode);
+            }
+            else if (pressed && !shifts.empty() && !key_config.shift_codes.empty()) {
                 shifted_keys.insert(keycode);
             }
+            bool using_fn_codes = fn_keys.count(keycode) > 0;
             bool using_shift_codes = shifted_keys.count(keycode) > 0;
             if (!pressed) {
+                fn_keys.erase(keycode);
                 shifted_keys.erase(keycode);
             }
 
-            std::vector<int> keys = using_shift_codes ? key_config.shift_codes : key_config.codes;
+            std::vector<int> keys = using_fn_codes ? key_config.fn_codes : using_shift_codes ? key_config.shift_codes : key_config.codes;
             if (!pressed) {
                 std::reverse(keys.begin(), keys.end());
             }
