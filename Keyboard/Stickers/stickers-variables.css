@@ -1,0 +1,30 @@
+/*******************************************
+Variables: edit these, then reload the page
+********************************************/
+
+/* Colors, to match using the swatch prints */
+:root {
+    /* Backgrounds */
+    --taupe:  #63524B;   /* Top row keys */
+    --green:  #55623D;   /* Envoi */
+    --key:    #36302F;   /* Regular keys */
+    --panel:  #363131;   /* Keyboard panel */
+
+    /* Inks */
+    --legend: #B0AEA4;   /* Regular key text */
+    --fn:     #5E8FD8;   /* Fn layer, blue */
+    --shift:  #D9B44A;   /* Shift layer, yellow */
+}
+
+/* Measurements, made from a caliper and a 600 dpi scan */
+:root {
+    --cap-ratio:   0.7;       /* Barlow: cap height / font size */
+    --tracking:    -0.06em;   /* letter spacing, i.e. Photoshop tracking -60 */
+    --bleed:       1mm;       /* background printed past the cut line */
+    --mark-zone:   2.9mm;     /* room for the crop marks around each sticker: bleed + 0.4 mm gap + 1.5 mm mark, see marks.svg */
+}
+
+@font-face {
+    font-family: "Barlow";
+    src: url("fonts/Barlow-Regular.ttf");
+}

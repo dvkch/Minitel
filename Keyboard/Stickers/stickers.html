@@ -1,0 +1,137 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Minitel 1B stickers</title>
+<link rel="stylesheet" href="stickers-variables.css">
+<link rel="stylesheet" href="stickers.css">
+<link rel="stylesheet" href="stickers-marks.css">
+<link rel="stylesheet" href="stickers-pages.css">
+</head>
+<body>
+
+<!-- ******* Icons *******
+     Each is drawn once here, then used as <svg class="icon"><use href="#icon-NAME"/></svg>.
+     They are 100 units tall (= the cap height), with a 10.14 stroke (= Barlow Regular's stem width). -->
+<svg width="0" height="0" style="position: absolute">
+    <!-- ⇱ Home: corner, and an arrow pointing into it -->
+    <symbol id="icon-home" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="5,95 5,5 95,5" />
+        <line x1="95" y1="95" x2="27" y2="27" />
+        <polyline points="67,27 27,27 27,67" />
+    </symbol>
+
+    <!-- ⇲ End: same, toward the bottom right corner -->
+    <symbol id="icon-end" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linecap="round" stroke-linejoin="round">
+        <polyline points="5,95 95,95 95,5" />
+        <line x1="5" y1="5" x2="73" y2="73" />
+        <polyline points="33,73 73,73 73,33" />
+    </symbol>
+
+    <!-- ⇞ Page Up: arrow up, with two bars across -->
+    <symbol id="icon-page-up" viewBox="0 0 70 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="35" y1="5" x2="35" y2="95" />
+        <polyline points="5,35 35,5 65,35" />
+        <line x1="11" y1="50" x2="59" y2="50" />
+        <line x1="11" y1="70" x2="59" y2="70" />
+    </symbol>
+
+    <!-- ⇟ Page Down -->
+    <symbol id="icon-page-down" viewBox="0 0 70 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linecap="round" stroke-linejoin="round">
+        <line x1="35" y1="5" x2="35" y2="95" />
+        <polyline points="5,65 35,95 65,65" />
+        <line x1="11" y1="30" x2="59" y2="30" />
+        <line x1="11" y1="50" x2="59" y2="50" />
+    </symbol>
+
+    <!-- ⏻ Power: open circle, and a bar through the opening -->
+    <symbol id="icon-power" viewBox="0 0 100 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linecap="round">
+        <path d="M 20 17 A 45 45 0 1 0 80 17" />
+        <line x1="50" y1="5" x2="50" y2="50" />
+    </symbol>
+
+    <!-- ⎄ Compose: a square and a circle, overlapping -->
+    <symbol id="icon-compose" viewBox="0 0 145 100" fill="none" stroke="currentColor" stroke-width="10.14" stroke-linejoin="round">
+        <rect x="5" y="5" width="90" height="90" />
+        <circle cx="95" cy="50" r="45" />
+    </symbol>
+
+    <!-- Num Lock: padlock with a 9, the 9 in the sticker's background color -->
+    <symbol id="icon-numlock" viewBox="0 0 75 100">
+        <path d="M 15 45 V 27 A 22.5 22.5 0 0 1 60 27 V 45" fill="none" stroke="currentColor" stroke-width="9" />
+        <rect x="0" y="40" width="75" height="60" rx="12" fill="currentColor" />
+        <text x="37.5" y="88.6" text-anchor="middle" font-family="Barlow" font-size="53" style="fill: var(--bg)">9</text>
+    </symbol>
+</svg>
+
+
+<!-- ******* Page 1: color swatches, built by stickers-swatches.js ******* -->
+<section class="page">
+    <h1>Minitel 1B stickers — 1 / 2: colors</h1>
+    <p class="notes">
+        Print this page on the sticker vinyl (colors depend on the paper), let it dry, then compare in daylight by laying the swatches on the keys.<br>
+        Copy the hex of the best match into the colors at the top of stickers-variables.css and reload. The bold value is the current one, and the grids re-center on it,<br>
+        so a second round with smaller steps (in stickers-swatches.js) gets you even closer. Then print page 2 on the vinyl.
+    </p>
+    <div class="ruler">This line must measure exactly 10 cm. Print with margins "None", scale 100 % and background graphics on.</div>
+
+    <div class="swatches" id="surfaces"></div>
+    <div class="swatches inks" id="inks"></div>
+</section>
+
+
+<!-- ******* Page 2: stickers; stickers.js adds a second, identical set ******* -->
+<section class="page">
+    <h1>Minitel 1B stickers — 2 / 2: stickers, two identical sets (one spare)</h1>
+    <p class="notes">
+        Cut along the gray crop marks: the colored background runs 1 mm past them, so a slightly off cut stays invisible.<br>
+        Fnct frame: also cut out the white center, along the inner edge of the blue line.<br>
+        Panel labels end ~1.4 mm above their key: blue (Fn) right-aligned with the key's right edge, yellow (Shift) left-aligned with its left edge.
+    </p>
+    <div class="ruler">This line must measure exactly 10 cm. Print with margins "None", scale 100 % and background graphics on.</div>
+
+    <div class="sheet">
+        <!-- On the function keys -->
+        <figure class="cell"><div class="sticker size-medium text-legend bg-taupe ink-legend type-key">Menu</div><figcaption>Connexion</figcaption></figure>
+        <figure class="cell"><div class="sticker size-medium text-legend bg-taupe ink-legend type-key">Début <svg class="icon"><use href="#icon-home"/></svg></div><figcaption>Sommaire</figcaption></figure>
+        <figure class="cell"><div class="sticker size-medium text-legend bg-taupe ink-legend type-key">Fin <svg class="icon"><use href="#icon-end"/></svg></div><figcaption>Guide</figcaption></figure>
+        <figure class="cell"><div class="sticker size-medium text-legend bg-taupe ink-legend type-key">Suppr</div><figcaption>Annulation</figcaption></figure>
+        <figure class="cell"><div class="sticker size-medium text-legend bg-taupe ink-legend type-key">Pg <svg class="icon"><use href="#icon-page-up"/></svg></div><figcaption>Répétition</figcaption></figure>
+        <figure class="cell"><div class="sticker size-medium text-legend bg-green ink-legend type-key">Pg <svg class="icon"><use href="#icon-page-down"/></svg></div><figcaption>Envoi</figcaption></figure>
+
+        <!-- On the other keys -->
+        <figure class="cell"><div class="sticker size-regular text-big bg-key ink-legend type-centered"><svg class="icon"><use href="#icon-numlock"/></svg></div><figcaption>Keypad *</figcaption></figure>
+        <figure class="cell"><div class="sticker size-regular text-big bg-key ink-legend type-centered"><svg class="icon"><use href="#icon-compose"/></svg></div><figcaption>Keypad #</figcaption></figure>
+        <figure class="cell"><div class="sticker size-regular text-legend bg-key ink-legend type-centered">Alt</div><figcaption>Right Shift</figcaption></figure>
+
+        <!-- Around Fnct -->
+        <figure class="cell"><div class="sticker size-frame bg-panel ink-fn type-frame"><div class="frame-line"></div></div><figcaption>Around Fnct</figcaption></figure>
+
+        <!-- On the panel: Fn layer, blue -->
+        <figure class="cell"><div class="sticker size-over text-legend bg-panel ink-fn type-fn"><svg class="icon"><use href="#icon-power"/></svg></div><figcaption>Over Brk</figcaption></figure>
+        <figure class="cell"><div class="sticker size-over text-legend bg-panel ink-fn type-fn">Vol −</div><figcaption>Over Œ</figcaption></figure>
+        <figure class="cell"><div class="sticker size-over text-legend bg-panel ink-fn type-fn">Vol +</div><figcaption>Over ß</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">€</div><figcaption>E</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">~</div><figcaption>-</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>1</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>2</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>3</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>4</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>5</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>6</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>7</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>8</figcaption></figure>
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-fn type-fn">F</div><figcaption>9</figcaption></figure>
+
+        <!-- On the panel: Shift layer, yellow -->
+        <figure class="cell"><div class="sticker size-panel text-legend bg-panel ink-shift type-shift">Tab</div><figcaption>Space</figcaption></figure>
+        <figure class="cell"><div class="sticker size-over text-legend bg-panel ink-shift type-shift">|</div><figcaption>Over ↑ (0)</figcaption></figure>
+    </div>
+</section>
+
+
+<script src="stickers-math.js"></script>
+<script src="stickers-swatches.js"></script>
+<script src="stickers.js"></script>
+</body>
+</html>

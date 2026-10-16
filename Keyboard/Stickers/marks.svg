@@ -1,0 +1,8 @@
+<!-- Crop marks: 1.5 mm lines starting 1.4 mm (bleed + gap) from the center, which sits on a sticker corner.
+     The image is twice the mark zone (stickers-variables.css): update both together. -->
+<svg xmlns="http://www.w3.org/2000/svg" width="5.8mm" height="5.8mm" viewBox="0 0 5.8 5.8" stroke="#999999" stroke-width="0.1">
+    <line x1="0"   y1="2.9" x2="1.5" y2="2.9" />
+    <line x1="4.3" y1="2.9" x2="5.8" y2="2.9" />
+    <line x1="2.9" y1="0"   x2="2.9" y2="1.5" />
+    <line x1="2.9" y1="4.3" x2="2.9" y2="5.8" />
+</svg>

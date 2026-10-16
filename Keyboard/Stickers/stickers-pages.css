@@ -1,0 +1,49 @@
+/*******************************************
+Pages
+********************************************/
+@page { size: A4; margin: 0; }
+* { print-color-adjust: exact; -webkit-print-color-adjust: exact; }
+
+body {
+    margin: 0;
+    background: #888;
+    font-family: "Barlow";
+}
+.page {
+    box-sizing: border-box;
+    width: 210mm;
+    height: 297mm;
+    padding: 10mm;
+    margin: 10mm auto;
+    background: white;
+    overflow: hidden;
+    break-after: page;
+}
+@media print {
+    body  { background: none; }
+    .page { margin: 0; }
+}
+h1     { font-size: 12pt; font-weight: normal; margin: 0 0 2mm; }
+h2     { font-size: 7.5pt; font-weight: normal; margin: 0 0 0.6mm; }
+.notes { font-size: 6.4pt; color: #333; margin: 0 0 3mm; line-height: 1.45; }
+.hint  { font-size: 5.2pt; color: #555; margin: 0 0 1.5mm; }
+.ruler {   /* a 10 cm line, to check the print scale */
+    width: 100mm;
+    border-top: 0.3mm solid black;
+    padding-top: 1mm;
+    margin-bottom: 7mm;
+    font-size: 5.5pt;
+    white-space: nowrap;
+}
+
+/* Swatch page */
+.swatches      { display: grid; grid-template-columns: repeat(2, max-content); gap: 6mm 10mm; margin-bottom: 6mm; }
+.swatches.inks { grid-template-columns: repeat(3, max-content); gap: 2mm; }
+.swatch-grid   { display: grid; grid-template-columns: repeat(5, max-content); gap: 1.2mm 2mm; }
+.swatch        { margin: 0; }
+.swatch .sticker { box-shadow: none; }   /* no bleed on swatches */
+.swatch figcaption { font-size: 4.8pt; color: #444; margin-top: 0.6mm; }
+.swatch.current figcaption { color: black; font-weight: bold; }
+
+/* Sticker page */
+.sheet { display: flex; flex-wrap: wrap; align-items: flex-start; gap: 4mm 2mm; margin-bottom: 8mm; }

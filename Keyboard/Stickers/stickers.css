@@ -1,0 +1,79 @@
+/*******************************************
+Stickers
+Created using: .sticker + size + font size + background + ink + type
+********************************************/
+
+.sticker {
+    box-sizing: border-box;
+    position: relative;
+    width: var(--width);
+    height: var(--height);
+    background: var(--bg);
+    box-shadow: 0 0 0 var(--bleed) var(--bg);   /* the bleed (not an outline or border: browsers round those to whole pixels) */
+    font-family: "Barlow";
+    font-size: calc(var(--cap) / var(--cap-ratio));
+    letter-spacing: var(--tracking);
+    line-height: 1;
+    white-space: nowrap;
+    text-box: trim-both cap alphabetic;      /* the text box is exactly the capitals: from baseline to cap top */
+}
+
+/* Sizes: the key top minus 0.5 mm on each side, or the panel label size */
+.size-medium  { --width: 18.6mm; --height: 6.7mm; }                  /* function keys, 19.6 x 7.7 */
+.size-regular { --width: 10.7mm; --height: 6.7mm; }                  /* other keys, 11.7 x 7.7 */
+.size-panel   { --width: auto;   --height: 3.6mm; }                  /* panel labels: as wide as their text */
+.size-over    { --width: auto;   --height: 4mm; min-width: 8mm; }    /* panel labels covering an old legend (Brk, Œ, ß, ↑): roomy */
+.size-frame   { --width: 16.8mm; --height: 12.8mm; }                 /* frame around Fnct */
+
+/* Font sizes, as cap height */
+.text-legend { --cap: 2.6mm; }   /* key and panel legends */
+.text-big    { --cap: 5mm; }     /* letters, keypad icons */
+
+/* Backgrounds and inks */
+.bg-taupe   { --bg: var(--taupe); }
+.bg-green   { --bg: var(--green); }
+.bg-key     { --bg: var(--key); }
+.bg-panel   { --bg: var(--panel); }
+.ink-legend { color: var(--legend); }
+.ink-fn     { color: var(--fn); }
+.ink-shift  { color: var(--shift); }
+
+/* Types: where the label sits */
+.type-key {         /* factory legend: top left, 1.82 mm from the key's left edge, cap top 1.27 mm from its top edge */
+    padding-left: 0.97mm;   /* 1.32 mm to the ink, minus the 0.35 mm side bearing of M, D, F, P in Barlow */
+    padding-top: 0.77mm;
+}
+.type-centered {    /* centered, like the letters */
+    text-align: center;
+    padding-top: calc((var(--height) - var(--cap)) / 2);
+}
+.type-fn {          /* blue panel label: right-aligned, like the red Ctrl legends */
+    text-align: right;
+    padding: calc((var(--height) - var(--cap)) / 2) 0.5mm 0;
+}
+.type-shift {       /* yellow panel label: left-aligned, like the Shift legends */
+    text-align: left;
+    padding: calc((var(--height) - var(--cap)) / 2) 0.5mm 0;
+}
+.type-frame .frame-line {          /* 14.8 x 10.8 frame, 0.5 mm line: a blue rounded rectangle... */
+    position: absolute;
+    inset: 1mm;
+    border-radius: 1.8mm;
+    background: currentColor;
+}
+.type-frame .frame-line::after {   /* ...with a white center, which is cut out */
+    content: "";
+    position: absolute;
+    inset: 0.5mm;
+    border-radius: 1.3mm;
+    background: white;
+}
+
+/* Icons: as tall as the capitals; their width comes from their symbol (see stickers.js) */
+.icon {
+    height: var(--cap);
+    width: auto;
+    vertical-align: baseline;
+    overflow: visible;
+    margin-left: 0.06em;    /* a little air after the word, which the tight letter spacing removes */
+}

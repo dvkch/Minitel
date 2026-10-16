@@ -1,0 +1,25 @@
+/*******************************************
+Crop marks
+
+Each sticker sits in a .cell, with room around it for the marks. marks.svg is a cross
+with its center missing, centered on each corner of the sticker. Its inner arms are
+hidden under the sticker, so only the marks pointing outward show.
+********************************************/
+.cell {
+    position: relative;
+    margin: 0;
+    padding: var(--mark-zone);
+    background-image: url("marks.svg"), url("marks.svg"), url("marks.svg"), url("marks.svg");
+    background-position: top left, top right, bottom left, bottom right;
+    background-size: calc(2 * var(--mark-zone));
+    background-repeat: no-repeat;
+}
+.cell figcaption {   /* where the sticker goes, printed under it */
+    position: absolute;
+    top: calc(100% + 0.3mm);
+    left: 50%;
+    transform: translateX(-50%);
+    font: 4.6pt "Barlow";
+    color: #333;
+    white-space: nowrap;
+}
