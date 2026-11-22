@@ -1,120 +1,109 @@
 /******* Swatch settings *******/
-// 5 x 5 grids of background colors: lightness from top (lighter) to bottom (darker),
+// 5 x 5 grids: lightness from top (lighter) to bottom (darker), changing by `lightness` between rows,
 // and `columns` from left to right, changing by `step` between neighbors
-const LIGHTNESS_STEP = 3;   // %, HSL lightness
 
+// Background colors: plain tiles, to lay on the keys and the panel
 const SURFACE_GRIDS = [
   {
     title: 'Function keys (taupe)',
     color: 'taupe',
+    lightness: 3,
     columns: 'hue',
     step: 6,
-    classes: 'size-medium text-legend ink-legend type-key',
-    content: 'Suppr'
+    hint: '← redder · yellower →'
   },
   {
     title: 'Letter keys',
     color: 'key',
-    columns: 'saturation',
-    step: 3,
-    classes: 'size-regular text-big ink-legend type-centered',
-    content: 'G'
+    lightness: 3,
+    columns: 'hue',
+    step: 6,
+    hint: '← pinker · browner →'
   },
   {
     title: 'Envoi (green)',
     color: 'green',
+    lightness: 3,
     columns: 'saturation',
     step: 8,
-    classes: 'size-medium text-legend ink-legend type-key',
-    content: 'Pg <svg class="icon"><use href="#icon-page-down"/></svg>'
+    hint: '← greyer · more colorful →'
   },
   {
     title: 'Panel (around the keys)',
     color: 'panel',
+    lightness: 3,
     columns: 'saturation',
     step: 3,
-    classes: 'size-regular text-legend type-key',
-    content: '<span class="ink-shift">Tab</span> <span class="ink-fn">F</span>'
+    hint: '← greyer · redder →'
   },
 ];
 
-// 2 x 5 grids of inks: each row changes the ink one way, by `step`, on a given background
+// Inks: bold text on a fixed background
 const INK_GRIDS = [
   {
-    title: 'Legend (on taupe, then on key)',
+    title: 'Legend (on letter keys)',
     color: 'legend',
-    classes: 'size-regular text-legend type-key',
-    content: 'Ag',
-    rows: [
-      { bg: 'taupe', vary: 'lightness', step: 6 },
-      { bg: 'key', vary: 'lightness', step: 6 }
-    ]
+    bg: 'key',
+    lightness: 3,
+    columns: 'hue',
+    step: 8,
+    hint: '← warmer · greener →'
   },
   {
     title: 'Fn labels, blue (on panel)',
     color: 'fn',
-    classes: 'size-regular text-legend type-fn',
-    content: 'Vol +',
-    rows: [
-      { bg: 'panel', vary: 'lightness', step: 6 },
-      { bg: 'panel', vary: 'saturation', step: 12 }
-    ]
+    bg: 'panel',
+    lightness: 6,
+    columns: 'saturation',
+    step: 12,
+    hint: '← greyer · more colorful →'
   },
   {
     title: 'Shift labels, yellow (on panel)',
     color: 'shift',
-    classes: 'size-regular text-legend type-shift',
-    content: 'Tab',
-    rows: [
-      { bg: 'panel', vary: 'lightness', step: 6 },
-      { bg: 'panel', vary: 'saturation', step: 12 }
-    ]
+    bg: 'panel',
+    lightness: 5,
+    columns: 'saturation',
+    step: 10,
+    hint: '← greyer · yellower →'
   },
 ];
-
-const HINTS = {
-    hue: '← redder · yellower →',
-    saturation: '← greyer · more colorful →',
-};
 
 
 /******* Swatches *******/
 const cssColor = name => getComputedStyle(document.documentElement).getPropertyValue('--' + name).trim();
 
-function swatch(classes, content, bg, ink, isCurrent, label) {
-    const inkStyle = ink ? `color: ${ink};` : '';
-    return `<figure class="swatch ${isCurrent ? 'current' : ''}">
-        <div class="sticker ${classes}" style="--bg: ${bg}; ${inkStyle}">${content}</div>
-        <figcaption>${label}</figcaption>
-    </figure>`;
+function swatch(tile, isCurrent, label) {
+    return `<figure class="swatch ${isCurrent ? 'current' : ''}">${tile}<figcaption>${label}</figcaption></figure>`;
 }
 
-function block(title, hint, cells) {
-    return `<section><h2>${title}</h2><p class="hint">${hint}</p><div class="swatch-grid">${cells.join('')}</div></section>`;
+function block(grid, cells) {
+    const hint = '↑ lighter · ↓ darker · ' + grid.hint;
+    return `<section><h2>${grid.title}</h2><p class="hint">${hint}</p><div class="swatch-grid">${cells.join('')}</div></section>`;
 }
 
-for (const grid of SURFACE_GRIDS) {
+// Calls `cell(color, isCurrent)` for the 25 variations of a grid's color
+function variations(grid, cell) {
     const base = cssColor(grid.color);
     const cells = [];
     for (let row = -2; row <= 2; row++) {
         for (let col = -2; col <= 2; col++) {
-            const color = vary(base, { lightness: -row * LIGHTNESS_STEP, [grid.columns]: col * grid.step });
-            cells.push(swatch(grid.classes, grid.content, color, null, row === 0 && col === 0, color));
+            const color = vary(base, { lightness: -row * grid.lightness, [grid.columns]: col * grid.step });
+            cells.push(cell(color, row === 0 && col === 0));
         }
     }
-    const hint = '↑ lighter · ↓ darker · ' + HINTS[grid.columns];
-    document.getElementById('surfaces').insertAdjacentHTML('beforeend', block(grid.title, hint, cells));
+    return cells;
+}
+
+for (const grid of SURFACE_GRIDS) {
+    const cells = variations(grid, (color, isCurrent) =>
+        swatch(`<div class="swatch-surface" style="--bg: ${color}"></div>`, isCurrent, color));
+    document.getElementById('surfaces').insertAdjacentHTML('beforeend', block(grid, cells));
 }
 
 for (const grid of INK_GRIDS) {
-    const base = cssColor(grid.color);
-    const cells = [];
-    for (const row of grid.rows) {
-        for (let col = -2; col <= 2; col++) {
-            const ink = vary(base, { [row.vary]: col * row.step });
-            cells.push(swatch(grid.classes, grid.content, cssColor(row.bg), ink, col === 0, ink));
-        }
-    }
-    const hint = grid.rows.map((row, i) => `row ${i + 1}: ↔ ${row.vary}`).join(' · ');
-    document.getElementById('inks').insertAdjacentHTML('beforeend', block(grid.title, hint, cells));
+    const bg = cssColor(grid.bg);
+    const cells = variations(grid, (color, isCurrent) =>
+        swatch(`<div class="sticker size-regular text-big type-centered" style="--bg: ${bg}; color: ${color}">Aa</div>`, isCurrent, color));
+    document.getElementById('inks').insertAdjacentHTML('beforeend', block(grid, cells));
 }

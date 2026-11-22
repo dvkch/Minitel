@@ -37,11 +37,12 @@ h2     { font-size: 7.5pt; font-weight: normal; margin: 0 0 0.6mm; }
 }
 
 /* Swatch page */
-.swatches      { display: grid; grid-template-columns: repeat(2, max-content); gap: 6mm 10mm; margin-bottom: 6mm; }
-.swatches.inks { grid-template-columns: repeat(3, max-content); gap: 2mm; }
-.swatch-grid   { display: grid; grid-template-columns: repeat(5, max-content); gap: 1.2mm 2mm; }
-.swatch        { margin: 0; }
-.swatch .sticker { box-shadow: none; }   /* no bleed on swatches */
+.swatches        { display: grid; grid-template-columns: repeat(2, max-content); gap: 6mm 8mm; margin-bottom: 6mm; }
+.swatches.inks   { grid-template-columns: repeat(3, max-content); gap: 6mm; }
+.swatch-grid     { display: grid; grid-template-columns: repeat(5, max-content); gap: 1.2mm 1mm; }
+.swatch          { margin: 0; }
+.swatch-surface  { width: 17mm; height: 11mm; background: var(--bg); }   /* background swatches: plain color, no label */
+.swatch .sticker { box-shadow: none; font-weight: bold; }                /* ink swatches: no bleed, bold so the ink is easier to judge */
 .swatch figcaption { font-size: 4.8pt; color: #444; margin-top: 0.6mm; }
 .swatch.current figcaption { color: black; font-weight: bold; }
 

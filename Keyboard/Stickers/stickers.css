@@ -61,12 +61,12 @@ Created using: .sticker + size + font size + background + ink + type
     border-radius: 1.8mm;
     background: currentColor;
 }
-.type-frame .frame-line::after {   /* ...with a white center, which is cut out */
+.type-frame .frame-line::after {   /* ...with a panel-colored center, so an imprecise cut doesn't show */
     content: "";
     position: absolute;
     inset: 0.5mm;
     border-radius: 1.3mm;
-    background: white;
+    background: var(--bg);
 }
 
 /* Icons: as tall as the capitals; their width comes from their symbol (see stickers.js) */
